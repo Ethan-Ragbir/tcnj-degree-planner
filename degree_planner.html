@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TCNJ Physics + Math Minor Planner</title>
+    <title>TCNJ Physics + Math Minor - Degree Planner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,1068 +14,2135 @@
         }
         
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
             line-height: 1.6;
         }
         
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+        .header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 2rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
         
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
         .header h1 {
-            color: #2563eb;
-            margin-bottom: 10px;
-            font-size: 2.5em;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
         }
         
-        .progress-section {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 400;
         }
         
-        .progress-bar {
-            width: 100%;
-            height: 20px;
-            background-color: #e5e7eb;
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 10px 0;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background-color: #10b981;
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-        
-        .stats {
+        .header-actions {
             display: flex;
-            justify-content: space-around;
-            margin-top: 15px;
-            flex-wrap: wrap;
+            gap: 1rem;
         }
         
-        .stat {
-            text-align: center;
-            padding: 10px;
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
-        .stat-number {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #2563eb;
-        }
-        
-        .years-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-            gap: 30px;
-        }
-        
-        .year-section {
+        .btn-primary {
             background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            color: #1e40af;
+        }
+        
+        .btn-primary:hover {
+            background: #f1f5f9;
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-1px);
+        }
+        
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .planner-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .year-column {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .year-header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .year-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 15px solid #1e40af;
         }
         
         .year-title {
-            font-size: 1.5em;
-            color: #2563eb;
-            margin-bottom: 20px;
-            text-align: center;
-            border-bottom: 2px solid #e5e7eb;
-            padding-bottom: 10px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
         }
         
-        .semester {
-            margin-bottom: 25px;
+        .year-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+        
+        .semester-section {
+            padding: 1.5rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .semester-section:last-child {
+            border-bottom: none;
+        }
+        
+        .semester-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
         }
         
         .semester-title {
-            font-size: 1.2em;
-            color: #4b5563;
-            margin-bottom: 15px;
-            padding: 8px 0;
-            border-bottom: 1px solid #e5e7eb;
-        }
-        
-        .course {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #374151;
             display: flex;
             align-items: center;
-            padding: 12px;
-            margin-bottom: 8px;
-            border-radius: 8px;
-            transition: all 0.2s ease;
+            gap: 0.5rem;
+        }
+        
+        .semester-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        
+        .fall-icon {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .spring-icon {
+            background: #10b981;
+            color: white;
+        }
+        
+        .add-course-btn {
+            background: #f1f5f9;
+            color: #6b7280;
+            border: 1px dashed #d1d5db;
+            border-radius: 6px;
+            padding: 0.5rem;
+            font-size: 0.8rem;
             cursor: pointer;
-            border: 2px solid transparent;
+            transition: all 0.2s ease;
         }
         
-        .course:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        .add-course-btn:hover {
+            background: #e5e7eb;
+            color: #374151;
         }
         
-        .course.completed {
-            background-color: #d1fae5;
-            border-color: #10b981;
+        .course-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
         }
         
-        .course.physics-core {
-            background-color: #dbeafe;
+        .course-card:hover {
             border-color: #3b82f6;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+            transform: translateY(-1px);
         }
         
-        .course.math-minor {
-            background-color: #fce7f3;
-            border-color: #ec4899;
-        }
-        
-        .course.physics-options {
-            background-color: #d1fae5;
+        .course-card.completed {
+            background: #ecfdf5;
             border-color: #10b981;
         }
         
-        .course.stem-elective {
-            background-color: #fed7aa;
-            border-color: #f97316;
-        }
-        
-        .course.college-core {
-            background-color: #fef3c7;
+        .course-card.in-progress {
+            background: #fef3c7;
             border-color: #f59e0b;
         }
         
-        .course.capstone {
-            background-color: #e0e7ff;
-            border-color: #6366f1;
+        .course-header {
+            display: flex;
+            justify-content: between;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
         }
         
-        .checkbox {
+        .course-checkbox {
             width: 20px;
             height: 20px;
-            border: 2px solid #6b7280;
+            border: 2px solid #d1d5db;
             border-radius: 4px;
-            margin-right: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            cursor: pointer;
             transition: all 0.2s ease;
+            margin-top: 2px;
         }
         
-        .checkbox.checked {
-            background-color: #10b981;
+        .course-checkbox.checked {
+            background: #10b981;
             border-color: #10b981;
             color: white;
         }
         
         .course-info {
-            flex-grow: 1;
+            flex: 1;
+            min-width: 0;
         }
         
         .course-code {
-            font-weight: bold;
-            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.25rem;
         }
         
         .course-name {
-            color: #6b7280;
-            font-size: 0.9em;
+            font-size: 0.85rem;
+            color: #64748b;
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
         }
         
-        .course-units {
-            background-color: #f3f4f6;
-            color: #4b5563;
-            padding: 2px 8px;
+        .course-meta {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .course-tag {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
             border-radius: 12px;
-            font-size: 0.8em;
-            margin-left: 10px;
-            flex-shrink: 0;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
-        .category-tag {
-            font-size: 0.7em;
-            padding: 2px 6px;
-            border-radius: 10px;
-            margin-left: 5px;
-            flex-shrink: 0;
+        .tag-core {
+            background: #dbeafe;
+            color: #1e40af;
         }
         
-        .edit-course {
-            margin-top: 10px;
-            padding: 8px;
-            background-color: #f9fafb;
-            border-radius: 6px;
-            display: none;
+        .tag-math {
+            background: #fce7f3;
+            color: #be185d;
         }
         
-        .edit-course.active {
-            display: block;
+        .tag-option {
+            background: #d1fae5;
+            color: #065f46;
         }
         
-        .edit-course input {
-            width: 100%;
-            padding: 4px 8px;
-            margin: 2px 0;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
+        .tag-stem {
+            background: #fed7aa;
+            color: #c2410c;
         }
         
-        .edit-buttons {
-            margin-top: 8px;
+        .tag-core-req {
+            background: #fef3c7;
+            color: #92400e;
         }
         
-        .btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-right: 8px;
-            font-size: 0.8em;
+        .tag-capstone {
+            background: #e0e7ff;
+            color: #3730a3;
         }
         
-        .btn-save {
-            background-color: #10b981;
-            color: white;
-        }
-        
-        .btn-cancel {
-            background-color: #6b7280;
-            color: white;
-        }
-        
-        .btn-edit {
-            background-color: #f3f4f6;
-            color: #4b5563;
-            font-size: 0.7em;
-            padding: 4px 8px;
-        }
-        
-        .actions {
-            text-align: center;
-            margin: 30px 0;
-        }
-        
-        .btn-primary {
-            background-color: #2563eb;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            margin: 0 10px;
-            font-size: 1em;
-        }
-        
-        .btn-primary:hover {
-            background-color: #1d4ed8;
-        }
-        
-        .suggestions {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .suggestions h3 {
-            color: #2563eb;
-            margin-bottom: 15px;
-        }
-        
-        .suggestions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-        
-        .suggestion-category h4 {
-            color: #4b5563;
-            margin-bottom: 10px;
-        }
-        
-        .suggestion-category ul {
-            list-style: none;
-        }
-        
-        .suggestion-category li {
-            padding: 4px 0;
+        .course-schedule {
+            font-size: 0.75rem;
             color: #6b7280;
-            font-size: 0.9em;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .course-actions {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            display: flex;
+            gap: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        
+        .course-card:hover .course-actions {
+            opacity: 1;
+        }
+        
+        .action-btn {
+            width: 24px;
+            height: 24px;
+            border: none;
+            background: #f1f5f9;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.7rem;
+            color: #6b7280;
+            transition: all 0.2s ease;
+        }
+        
+        .action-btn:hover {
+            background: #e5e7eb;
+            color: #374151;
+        }
+        
+        .prereq-indicator {
+            font-size: 0.7rem;
+            color: #ef4444;
+            margin-top: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .schedule-legend {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .legend-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1e293b;
+        }
+        
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #6b7280;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: border-color 0.2s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            background: white;
+        }
+        
+        .calendar-integration {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .calendar-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        
+        .semester-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .semester-tab {
+            padding: 0.5rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .semester-tab.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: 80px repeat(5, 1fr);
+            gap: 1px;
+            background: #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .time-slot, .day-header, .schedule-cell {
+            background: white;
+            padding: 0.5rem;
+            font-size: 0.75rem;
+            text-align: center;
+        }
+        
+        .day-header {
+            font-weight: 600;
+            background: #f8fafc;
+            color: #374151;
+        }
+        
+        .time-slot {
+            font-weight: 500;
+            color: #6b7280;
+            background: #f8fafc;
+        }
+        
+        .schedule-cell.has-class {
+            background: #dbeafe;
+            color: #1e40af;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 1200px) {
+            .planner-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
         
         @media (max-width: 768px) {
-            .years-grid {
+            .planner-grid {
                 grid-template-columns: 1fr;
             }
             
-            .stats {
+            .header-content {
                 flex-direction: column;
+                text-align: center;
+                gap: 1rem;
             }
             
-            .header h1 {
-                font-size: 2em;
+            .main-container {
+                padding: 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🎓 TCNJ Physics + Math Minor Planner</h1>
-            <p>Click courses to mark as completed • Right-click to edit • Track your progress!</p>
-        </div>
-        
-        <div class="progress-section">
-            <h2>📊 Your Progress</h2>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
+    <header class="header">
+        <div class="header-content">
+            <div>
+                <h1>TCNJ Physics + Math Minor</h1>
+                <p>Professional Degree Planning Tool</p>
             </div>
-            <div class="stats">
-                <div class="stat">
-                    <div class="stat-number" id="completedCourses">0</div>
-                    <div>Courses Completed</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number" id="totalCourses">32</div>
-                    <div>Total Courses</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number" id="completedUnits">0</div>
-                    <div>Units Completed</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number" id="progressPercent">0%</div>
-                    <div>Progress</div>
-                </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="exportToGoogleCalendar()">
+                    <i class="fas fa-calendar-plus"></i>
+                    Export to Calendar
+                </button>
+                <button class="btn btn-primary" onclick="saveToFile()">
+                    <i class="fas fa-download"></i>
+                    Save Plan
+                </button>
             </div>
         </div>
-        
-        <div class="years-grid">
-            <div class="year-section">
-                <div class="year-title">👶 Freshman Year</div>
-                
-                <div class="semester">
-                    <div class="semester-title">🍂 Fall Semester</div>
-                    <div class="course physics-core" data-course-id="phy099">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">PHY 099</div>
-                            <div class="course-name">Orientation to Physics</div>
-                        </div>
-                        <div class="course-units">0 units</div>
-                        <div class="category-tag">Core</div>
-                        <button class="btn-edit" onclick="toggleEdit('phy099')">✏️</button>
-                    </div>
-                    <div class="edit-course" id="edit-phy099">
-                        <input type="text" id="code-phy099" placeholder="Course Code" value="PHY 099">
-                        <input type="text" id="name-phy099" placeholder="Course Name" value="Orientation to Physics">
-                        <input type="number" id="units-phy099" placeholder="Units" value="0" step="0.25">
-                        <div class="edit-buttons">
-                            <button class="btn btn-save" onclick="saveCourse('phy099')">💾 Save</button>
-                            <button class="btn btn-cancel" onclick="cancelEdit('phy099')">❌ Cancel</button>
-                        </div>
-                    </div>
-                    
-                    <div class="course physics-core" data-course-id="phy203">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">PHY 203</div>
-                            <div class="course-name">General Physics I</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">Core</div>
-                        <button class="btn-edit" onclick="toggleEdit('phy203')">✏️</button>
-                    </div>
-                    
-                    <div class="course math-minor" data-course-id="mat127">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">MAT 127</div>
-                            <div class="course-name">Calculus A</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">Math</div>
-                        <button class="btn-edit" onclick="toggleEdit('mat127')">✏️</button>
-                    </div>
-                    
-                    <div class="course college-core" data-course-id="fsp">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">FSP 1XX</div>
-                            <div class="course-name">First Seminar Program</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">Core</div>
-                        <button class="btn-edit" onclick="toggleEdit('fsp')">✏️</button>
-                    </div>
+    </header>
+
+    <div class="main-container">
+        <div class="schedule-legend">
+            <h3 class="legend-title">Course Schedule Information</h3>
+            <div class="legend-grid">
+                <div class="legend-item">
+                    <div class="course-tag tag-core">Core</div>
+                    <span>Physics Core Courses</span>
+                </div>
+                <div class="legend-item">
+                    <div class="course-tag tag-math">Math</div>
+                    <span>Math Minor Courses</span>
+                </div>
+                <div class="legend-item">
+                    <div class="course-tag tag-option">Option</div>
+                    <span>Physics Options</span>
+                </div>
+                <div class="legend-item">
+                    <div class="course-tag tag-stem">STEM</div>
+                    <span>STEM Electives</span>
+                </div>
+                <div class="legend-item">
+                    <div class="course-tag tag-core-req">Core Req</div>
+                    <span>College Core Requirements</span>
+                </div>
+                <div class="legend-item">
+                    <div class="course-tag tag-capstone">Capstone</div>
+                    <span>Capstone Course</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="planner-grid">
+            <!-- Freshman Year -->
+            <div class="year-column">
+                <div class="year-header">
+                    <div class="year-title">Freshman Year</div>
+                    <div class="year-subtitle">2024-2025</div>
                 </div>
                 
-                <div class="semester">
-                    <div class="semester-title">🌸 Spring Semester</div>
-                    <div class="course physics-core" data-course-id="phy204">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">PHY 204</div>
-                            <div class="course-name">General Physics II</div>
+                <div class="semester-section">
+                    <div class="semester-header">
+                        <div class="semester-title">
+                            <div class="semester-icon fall-icon">🍂</div>
+                            Fall 2024
                         </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">Core</div>
-                        <button class="btn-edit" onclick="toggleEdit('phy204')">✏️</button>
+                        <button class="add-course-btn" onclick="addCourse('freshman-fall')">
+                            <i class="fas fa-plus"></i>
+                        </button>
                     </div>
-                    
-                    <div class="course math-minor" data-course-id="mat128">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">MAT 128</div>
-                            <div class="course-name">Calculus B</div>
+                    <div id="freshman-fall">
+                        <div class="course-card" data-course="phy299">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('phy299')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">PHY 299</div>
+                                    <div class="course-name">Research Fundamentals Seminar</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-core">Core</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Every Semester • 0.25 units
+                                    </div>
+                                    <div class="prereq-indicator">
+                                        <i class="fas fa-link"></i>
+                                        Prereq: PHY 099
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">Math</div>
-                        <button class="btn-edit" onclick="toggleEdit('mat128')">✏️</button>
-                    </div>
-                    
-                    <div class="course college-core" data-course-id="lang1">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">LANG</div>
-                            <div class="course-name">Second Language I</div>
+
+                        <div class="course-card" data-course="phy321">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('phy321')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">PHY 321</div>
+                                    <div class="course-name">Modern Physics</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-core">Core</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Fall Only • 1 unit • Lab
+                                    </div>
+                                    <div class="prereq-indicator">
+                                        <i class="fas fa-link"></i>
+                                        Prereq: PHY 202, MAT 128
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">Core</div>
-                        <button class="btn-edit" onclick="toggleEdit('lang1')">✏️</button>
-                    </div>
-                    
-                    <div class="course college-core" data-course-id="core1">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">CORE</div>
-                            <div class="course-name">College Core Course</div>
+
+                        <div class="course-card" data-course="mat229">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('mat229')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">MAT 229</div>
+                                    <div class="course-name">Multivariable Calculus</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-math">Math</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Every Semester • 1 unit
+                                    </div>
+                                    <div class="prereq-indicator">
+                                        <i class="fas fa-link"></i>
+                                        Prereq: MAT 128
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">Core</div>
-                        <button class="btn-edit" onclick="toggleEdit('core1')">✏️</button>
+
+                        <div class="course-card" data-course="mat205">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('mat205')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">MAT 205</div>
+                                    <div class="course-name">Linear Algebra: Theory and Applications</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-math">Math</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Every Semester • 1 unit • Lab
+                                    </div>
+                                    <div class="prereq-indicator">
+                                        <i class="fas fa-link"></i>
+                                        Prereq: MAT 128 or MAT 200
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                </div>
+
+                <div class="semester-section">
+                    <div class="semester-header">
+                        <div class="semester-title">
+                            <div class="semester-icon spring-icon">🌸</div>
+                            Spring 2026
+                        </div>
+                        <button class="add-course-btn" onclick="addCourse('sophomore-spring')">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div id="sophomore-spring">
+                        <div class="course-card" data-course="phy306">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('phy306')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">PHY 306</div>
+                                    <div class="course-name">Mathematical Physics</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-core">Core</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Fall Only • 1 unit
+                                    </div>
+                                    <div class="prereq-indicator">
+                                        <i class="fas fa-link"></i>
+                                        Prereq: PHY 201, MAT 128
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card" data-course="mat326">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('mat326')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">MAT 326</div>
+                                    <div class="course-name">Differential Equations</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-math">Math</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Every Semester • 1 unit
+                                    </div>
+                                    <div class="prereq-indicator">
+                                        <i class="fas fa-link"></i>
+                                        Prereq: MAT 128 and (MAT 200 or MAT 205 or MAT 229)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card" data-course="lang2">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('lang2')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">LANG</div>
+                                    <div class="course-name">Second Language II</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-core-req">Core Req</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Every Semester • 1 unit
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card" data-course="core2">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('core2')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">CORE</div>
+                                    <div class="course-name">College Core Course</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-core-req">Core Req</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Various Times • 1 unit
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Junior Year -->
+            <div class="year-column">
+                <div class="year-header">
+                    <div class="year-title">Junior Year</div>
+                    <div class="year-subtitle">2026-2027</div>
+                </div>
+                
+                <div class="semester-section">
+                    <div class="semester-header">
+                        <div class="semester-title">
+                            <div class="semester-icon fall-icon">🍂</div>
+                            Fall 2026
+                        </div>
+                        <button class="add-course-btn" onclick="addCourse('junior-fall')">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div id="junior-fall">
+                        <div class="course-card" data-course="phy431">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('phy431')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">PHY 431</div>
+                                    <div class="course-name">Quantum Mechanics</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-core">Core</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Fall Only • 1 unit
+                                    </div>
+                                    <div class="prereq-indicator">
+                                        <i class="fas fa-link"></i>
+                                        Prereq: PHY 321, PHY 306 or MAT 205
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card" data-course="phy421">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('phy421')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">PHY 421</div>
+                                    <div class="course-name">Electromagnetic Theory I</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-core">Core</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Fall Only • 1 unit
+                                    </div>
+                                    <div class="prereq-indicator">
+                                        <i class="fas fa-link"></i>
+                                        Prereq: PHY 306 or MAT 229
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card" data-course="mat3xx">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('mat3xx')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">MAT 3XX</div>
+                                    <div class="course-name">Advanced Math Course</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-math">Math</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Various • 1 unit
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card" data-course="stem1">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('stem1')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">STEM</div>
+                                    <div class="course-name">STEM Elective (200+ level)</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-stem">STEM</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Various Times • 1 unit
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="semester-section">
+                    <div class="semester-header">
+                        <div class="semester-title">
+                            <div class="semester-icon spring-icon">🌸</div>
+                            Spring 2027
+                        </div>
+                        <button class="add-course-btn" onclick="addCourse('junior-spring')">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div id="junior-spring">
+                        <div class="course-card" data-course="phy401">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('phy401')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">PHY 401</div>
+                                    <div class="course-name">Classical Mechanics</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-core">Core</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Spring Only • 1 unit
+                                    </div>
+                                    <div class="prereq-indicator">
+                                        <i class="fas fa-link"></i>
+                                        Prereq: PHY 306 or MAT 229, PHY 321
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card" data-course="phy356">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('phy356')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">PHY 356</div>
+                                    <div class="course-name">Thermal Physics</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-core">Core</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Spring Only • 1 unit
+                                    </div>
+                                    <div class="prereq-indicator">
+                                        <i class="fas fa-link"></i>
+                                        Prereq: PHY 202, PHY 306 or MAT 229
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card" data-course="phyopt1">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('phyopt1')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">PHY 3XX</div>
+                                    <div class="course-name">Physics Option (w/ lab)</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-option">Option</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Various Times • 1 unit
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card" data-course="stem2">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('stem2')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">STEM</div>
+                                    <div class="course-name">STEM Elective (200+ level)</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-stem">STEM</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Various Times • 1 unit
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Senior Year -->
+            <div class="year-column">
+                <div class="year-header">
+                    <div class="year-title">Senior Year</div>
+                    <div class="year-subtitle">2027-2028</div>
+                </div>
+                
+                <div class="semester-section">
+                    <div class="semester-header">
+                        <div class="semester-title">
+                            <div class="semester-icon fall-icon">🍂</div>
+                            Fall 2027
+                        </div>
+                        <button class="add-course-btn" onclick="addCourse('senior-fall')">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div id="senior-fall">
+                        <div class="course-card" data-course="phyopt2">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('phyopt2')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">PHY 3XX</div>
+                                    <div class="course-name">Physics Option Course</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-option">Option</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Various Times • 1 unit
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card" data-course="phyopt3">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('phyopt3')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">PHY 3XX</div>
+                                    <div class="course-name">Physics Option Course</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-option">Option</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Various Times • 1 unit
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card" data-course="stem3">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('stem3')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">STEM</div>
+                                    <div class="course-name">STEM Elective</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-stem">STEM</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Various Times • 1 unit
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card" data-course="core3">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('core3')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">CORE</div>
+                                    <div class="course-name">College Core Course</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-core-req">Core Req</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Various Times • 1 unit
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="semester-section">
+                    <div class="semester-header">
+                        <div class="semester-title">
+                            <div class="semester-icon spring-icon">🌸</div>
+                            Spring 2028
+                        </div>
+                        <button class="add-course-btn" onclick="addCourse('senior-spring')">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div id="senior-spring">
+                        <div class="course-card" data-course="phy451">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('phy451')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">PHY 451</div>
+                                    <div class="course-name">Advanced Experimental Physics</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-capstone">Capstone</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Spring & Fall • 1 unit • Writing Intensive
+                                    </div>
+                                    <div class="prereq-indicator">
+                                        <i class="fas fa-link"></i>
+                                        Prereq: PHY 306 or MAT 229, PHY 321
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card" data-course="phyopt4">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('phyopt4')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">PHY 3XX</div>
+                                    <div class="course-name">Physics Option Course</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-option">Option</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Various Times • 1 unit
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card" data-course="stem4">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('stem4')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">STEM</div>
+                                    <div class="course-name">STEM Elective</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-stem">STEM</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Various Times • 1 unit
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card" data-course="stem5">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('stem5')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">STEM</div>
+                                    <div class="course-name">STEM Elective</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-stem">STEM</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Various Times • 1 unit
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar Integration Section -->
+        <div class="calendar-integration">
+            <div class="calendar-header">
+                <h3 class="calendar-title">📅 Schedule Builder & Google Calendar Integration</h3>
+                <div class="semester-tabs">
+                    <button class="semester-tab active" onclick="showSchedule('fall2024')">Fall 2024</button>
+                    <button class="semester-tab" onclick="showSchedule('spring2025')">Spring 2025</button>
+                    <button class="semester-tab" onclick="showSchedule('fall2025')">Fall 2025</button>
+                    <button class="semester-tab" onclick="showSchedule('spring2026')">Spring 2026</button>
                 </div>
             </div>
             
-            <div class="year-section">
-                <div class="year-title">🎓 Sophomore Year</div>
+            <div id="schedule-view" class="schedule-grid">
+                <div class="time-slot"></div>
+                <div class="day-header">Monday</div>
+                <div class="day-header">Tuesday</div>
+                <div class="day-header">Wednesday</div>
+                <div class="day-header">Thursday</div>
+                <div class="day-header">Friday</div>
                 
-                <div class="semester">
-                    <div class="semester-title">🍂 Fall Semester</div>
-                    <div class="course physics-core" data-course-id="phy299">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">PHY 299</div>
-                            <div class="course-name">Sophomore Seminar</div>
-                        </div>
-                        <div class="course-units">0.25 units</div>
-                        <div class="category-tag">Core</div>
-                        <button class="btn-edit" onclick="toggleEdit('phy299')">✏️</button>
-                    </div>
-                    
-                    <div class="course math-minor" data-course-id="mat229">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">MAT 229</div>
-                            <div class="course-name">Multivariable Calculus</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">Math</div>
-                        <button class="btn-edit" onclick="toggleEdit('mat229')">✏️</button>
-                    </div>
-                    
-                    <div class="course math-minor" data-course-id="mat205">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">MAT 205</div>
-                            <div class="course-name">Linear Algebra</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">Math</div>
-                        <button class="btn-edit" onclick="toggleEdit('mat205')">✏️</button>
-                    </div>
-                    
-                    <div class="course college-core" data-course-id="lang2">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">LANG</div>
-                            <div class="course-name">Second Language II</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">Core</div>
-                        <button class="btn-edit" onclick="toggleEdit('lang2')">✏️</button>
-                    </div>
-                </div>
+                <div class="time-slot">8:00 AM</div>
+                <div class="schedule-cell" id="mon-8"></div>
+                <div class="schedule-cell" id="tue-8"></div>
+                <div class="schedule-cell" id="wed-8"></div>
+                <div class="schedule-cell" id="thu-8"></div>
+                <div class="schedule-cell" id="fri-8"></div>
                 
-                <div class="semester">
-                    <div class="semester-title">🌸 Spring Semester</div>
-                    <div class="course physics-core" data-course-id="phy306">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">PHY 306</div>
-                            <div class="course-name">Mathematical Methods for Physicists</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">Core</div>
-                        <button class="btn-edit" onclick="toggleEdit('phy306')">✏️</button>
-                    </div>
-                    
-                    <div class="course physics-core" data-course-id="phy321">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">PHY 321</div>
-                            <div class="course-name">Modern Physics</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">Core</div>
-                        <button class="btn-edit" onclick="toggleEdit('phy321')">✏️</button>
-                    </div>
-                    
-                    <div class="course math-minor" data-course-id="mat310">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">MAT 310</div>
-                            <div class="course-name">Differential Equations</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">Math</div>
-                        <button class="btn-edit" onclick="toggleEdit('mat310')">✏️</button>
-                    </div>
-                    
-                    <div class="course college-core" data-course-id="core2">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">CORE</div>
-                            <div class="course-name">College Core Course</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">Core</div>
-                        <button class="btn-edit" onclick="toggleEdit('core2')">✏️</button>
-                    </div>
-                </div>
+                <div class="time-slot">9:00 AM</div>
+                <div class="schedule-cell" id="mon-9"></div>
+                <div class="schedule-cell" id="tue-9"></div>
+                <div class="schedule-cell" id="wed-9"></div>
+                <div class="schedule-cell" id="thu-9"></div>
+                <div class="schedule-cell" id="fri-9"></div>
+                
+                <div class="time-slot">10:00 AM</div>
+                <div class="schedule-cell" id="mon-10"></div>
+                <div class="schedule-cell" id="tue-10"></div>
+                <div class="schedule-cell" id="wed-10"></div>
+                <div class="schedule-cell" id="thu-10"></div>
+                <div class="schedule-cell" id="fri-10"></div>
+                
+                <div class="time-slot">11:00 AM</div>
+                <div class="schedule-cell" id="mon-11"></div>
+                <div class="schedule-cell" id="tue-11"></div>
+                <div class="schedule-cell" id="wed-11"></div>
+                <div class="schedule-cell" id="thu-11"></div>
+                <div class="schedule-cell" id="fri-11"></div>
+                
+                <div class="time-slot">12:00 PM</div>
+                <div class="schedule-cell" id="mon-12"></div>
+                <div class="schedule-cell" id="tue-12"></div>
+                <div class="schedule-cell" id="wed-12"></div>
+                <div class="schedule-cell" id="thu-12"></div>
+                <div class="schedule-cell" id="fri-12"></div>
+                
+                <div class="time-slot">1:00 PM</div>
+                <div class="schedule-cell" id="mon-13"></div>
+                <div class="schedule-cell" id="tue-13"></div>
+                <div class="schedule-cell" id="wed-13"></div>
+                <div class="schedule-cell" id="thu-13"></div>
+                <div class="schedule-cell" id="fri-13"></div>
+                
+                <div class="time-slot">2:00 PM</div>
+                <div class="schedule-cell" id="mon-14"></div>
+                <div class="schedule-cell" id="tue-14"></div>
+                <div class="schedule-cell" id="wed-14"></div>
+                <div class="schedule-cell" id="thu-14"></div>
+                <div class="schedule-cell" id="fri-14"></div>
+                
+                <div class="time-slot">3:00 PM</div>
+                <div class="schedule-cell" id="mon-15"></div>
+                <div class="schedule-cell" id="tue-15"></div>
+                <div class="schedule-cell" id="wed-15"></div>
+                <div class="schedule-cell" id="thu-15"></div>
+                <div class="schedule-cell" id="fri-15"></div>
+                
+                <div class="time-slot">4:00 PM</div>
+                <div class="schedule-cell" id="mon-16"></div>
+                <div class="schedule-cell" id="tue-16"></div>
+                <div class="schedule-cell" id="wed-16"></div>
+                <div class="schedule-cell" id="thu-16"></div>
+                <div class="schedule-cell" id="fri-16"></div>
             </div>
             
-            <div class="year-section">
-                <div class="year-title">🔬 Junior Year</div>
-                
-                <div class="semester">
-                    <div class="semester-title">🍂 Fall Semester</div>
-                    <div class="course physics-core" data-course-id="phy356">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">PHY 356</div>
-                            <div class="course-name">Classical Mechanics</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">Core</div>
-                        <button class="btn-edit" onclick="toggleEdit('phy356')">✏️</button>
-                    </div>
-                    
-                    <div class="course physics-options" data-course-id="phyopt1">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">PHY 3XX</div>
-                            <div class="course-name">Physics Option Course</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">Option</div>
-                        <button class="btn-edit" onclick="toggleEdit('phyopt1')">✏️</button>
-                    </div>
-                    
-                    <div class="course math-minor" data-course-id="matadv">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">MAT 3XX</div>
-                            <div class="course-name">Advanced Math Course</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">Math</div>
-                        <button class="btn-edit" onclick="toggleEdit('matadv')">✏️</button>
-                    </div>
-                    
-                    <div class="course stem-elective" data-course-id="stem1">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">STEM</div>
-                            <div class="course-name">STEM Elective (200+ level)</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">STEM</div>
-                        <button class="btn-edit" onclick="toggleEdit('stem1')">✏️</button>
-                    </div>
-                </div>
-                
-                <div class="semester">
-                    <div class="semester-title">🌸 Spring Semester</div>
-                    <div class="course physics-core" data-course-id="phy401">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">PHY 401</div>
-                            <div class="course-name">Electricity & Magnetism</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">Core</div>
-                        <button class="btn-edit" onclick="toggleEdit('phy401')">✏️</button>
-                    </div>
-                    
-                    <div class="course physics-options" data-course-id="phyopt2">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">PHY 3XX</div>
-                            <div class="course-name">Physics Option (w/ lab)</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">Option</div>
-                        <button class="btn-edit" onclick="toggleEdit('phyopt2')">✏️</button>
-                    </div>
-                    
-                    <div class="course stem-elective" data-course-id="stem2">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">STEM</div>
-                            <div class="course-name">STEM Elective (200+ level)</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">STEM</div>
-                        <button class="btn-edit" onclick="toggleEdit('stem2')">✏️</button>
-                    </div>
-                    
-                    <div class="course college-core" data-course-id="core3">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">CORE</div>
-                            <div class="course-name">College Core Course</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">Core</div>
-                        <button class="btn-edit" onclick="toggleEdit('core3')">✏️</button>
-                    </div>
-                </div>
+            <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+                <button class="btn btn-primary" onclick="generateGoogleCalendar()">
+                    <i class="fab fa-google"></i>
+                    Export to Google Calendar
+                </button>
+                <button class="btn btn-secondary" onclick="addToSchedule()">
+                    <i class="fas fa-plus"></i>
+                    Add Time Block
+                </button>
+                <button class="btn btn-secondary" onclick="clearSchedule()">
+                    <i class="fas fa-trash"></i>
+                    Clear Schedule
+                </button>
             </div>
-            
-            <div class="year-section">
-                <div class="year-title">🎉 Senior Year</div>
-                
-                <div class="semester">
-                    <div class="semester-title">🍂 Fall Semester</div>
-                    <div class="course physics-core" data-course-id="phy421">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">PHY 421</div>
-                            <div class="course-name">Quantum Mechanics</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">Core</div>
-                        <button class="btn-edit" onclick="toggleEdit('phy421')">✏️</button>
-                    </div>
-                    
-                    <div class="course physics-options" data-course-id="phyopt3">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">PHY 3XX</div>
-                            <div class="course-name">Physics Option Course</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">Option</div>
-                        <button class="btn-edit" onclick="toggleEdit('phyopt3')">✏️</button>
-                    </div>
-                    
-                    <div class="course stem-elective" data-course-id="stem3">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">STEM</div>
-                            <div class="course-name">STEM Elective</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">STEM</div>
-                        <button class="btn-edit" onclick="toggleEdit('stem3')">✏️</button>
-                    </div>
-                    
-                    <div class="course college-core" data-course-id="core4">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">CORE</div>
-                            <div class="course-name">College Core Course</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">Core</div>
-                        <button class="btn-edit" onclick="toggleEdit('core4')">✏️</button>
-                    </div>
+        </div>
+    </div>
+
+    <!-- Course Edit Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Course</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Course Code</label>
+                    <input type="text" id="editCode" class="form-input" placeholder="e.g., PHY 203">
                 </div>
-                
-                <div class="semester">
-                    <div class="semester-title">🌸 Spring Semester</div>
-                    <div class="course capstone" data-course-id="phy451">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">PHY 451</div>
-                            <div class="course-name">Senior Thesis/Research</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">Capstone</div>
-                        <button class="btn-edit" onclick="toggleEdit('phy451')">✏️</button>
-                    </div>
-                    
-                    <div class="course physics-options" data-course-id="phyopt4">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">PHY 3XX</div>
-                            <div class="course-name">Physics Option Course</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">Option</div>
-                        <button class="btn-edit" onclick="toggleEdit('phyopt4')">✏️</button>
-                    </div>
-                    
-                    <div class="course stem-elective" data-course-id="stem4">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">STEM</div>
-                            <div class="course-name">STEM Elective</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">STEM</div>
-                        <button class="btn-edit" onclick="toggleEdit('stem4')">✏️</button>
-                    </div>
-                    
-                    <div class="course stem-elective" data-course-id="stem5">
-                        <div class="checkbox"></div>
-                        <div class="course-info">
-                            <div class="course-code">STEM</div>
-                            <div class="course-name">STEM Elective</div>
-                        </div>
-                        <div class="course-units">1 unit</div>
-                        <div class="category-tag">STEM</div>
-                        <button class="btn-edit" onclick="toggleEdit('stem5')">✏️</button>
-                    </div>
+                <div class="form-group">
+                    <label class="form-label">Course Name</label>
+                    <input type="text" id="editName" class="form-input" placeholder="e.g., Physics I for Physicists">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Units</label>
+                    <input type="number" id="editUnits" class="form-input" step="0.25" min="0" max="4" placeholder="1">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select id="editCategory" class="form-select">
+                        <option value="core">Physics Core</option>
+                        <option value="math">Math Minor</option>
+                        <option value="option">Physics Option</option>
+                        <option value="stem">STEM Elective</option>
+                        <option value="core-req">College Core Requirement</option>
+                        <option value="capstone">Capstone</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Schedule Info</label>
+                    <input type="text" id="editSchedule" class="form-input" placeholder="e.g., Fall Only • 1 unit • Lab">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Prerequisites</label>
+                    <input type="text" id="editPrereqs" class="form-input" placeholder="e.g., PHY 203, MAT 127">
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button class="btn btn-primary" onclick="saveCourseEdit()" style="flex: 1;">
+                        <i class="fas fa-save"></i>
+                        Save Changes
+                    </button>
+                    <button class="btn btn-secondary" onclick="closeModal()" style="flex: 1;">
+                        <i class="fas fa-times"></i>
+                        Cancel
+                    </button>
                 </div>
             </div>
         </div>
-        
-        <div class="actions">
-            <button class="btn-primary" onclick="exportData()">💾 Export Plan</button>
-            <button class="btn-primary" onclick="document.getElementById('importFile').click()">📁 Import Plan</button>
-            <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
-            <button class="btn-primary" onclick="resetProgress()">🔄 Reset All</button>
-        </div>
-        
-        <div class="suggestions">
-            <h3>📚 Course Suggestions & Options</h3>
-            <div class="suggestions-grid">
-                <div class="suggestion-category">
-                    <h4>🔬 Physics Options</h4>
-                    <ul>
-                        <li>PHY 220 - Advanced Geology (lab)</li>
-                        <li>PHY 311 - Electronics</li>
-                        <li>PHY 345 - Thermal Physics</li>
-                        <li>PHY 361 - Introduction to Astrophysics</li>
-                        <li>PHY 393 - Independent Study</li>
-                        <li>PHY 411 - Advanced Laboratory</li>
-                        <li>PHY 413 - Stellar Astronomy</li>
-                        <li>PHY 425 - Condensed Matter Physics</li>
-                        <li>PHY 426 - Particle Physics</li>
-                        <li>PHY 431 - Fluid Dynamics</li>
-                        <li>PHY 466 - Extragalactic Astronomy</li>
-                    </ul>
+    </div>
+
+    <!-- Add Course Modal -->
+    <div class="modal" id="addModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Course</h3>
+                <button class="modal-close" onclick="closeAddModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Semester</label>
+                    <select id="addSemester" class="form-select">
+                        <option value="freshman-fall">Freshman Fall</option>
+                        <option value="freshman-spring">Freshman Spring</option>
+                        <option value="sophomore-fall">Sophomore Fall</option>
+                        <option value="sophomore-spring">Sophomore Spring</option>
+                        <option value="junior-fall">Junior Fall</option>
+                        <option value="junior-spring">Junior Spring</option>
+                        <option value="senior-fall">Senior Fall</option>
+                        <option value="senior-spring">Senior Spring</option>
+                    </select>
                 </div>
-                
-                <div class="suggestion-category">
-                    <h4>🔢 Math Minor Options</h4>
-                    <ul>
-                        <li>MAT 200 - Proof Writing Through Discrete Math</li>
-                        <li>MAT 305 - Number Theory</li>
-                        <li>MAT 320 - Real Analysis</li>
-                        <li>MAT 330 - Complex Analysis</li>
-                        <li>MAT 350 - Abstract Algebra</li>
-                        <li>MAT 365 - Probability Theory</li>
-                        <li>MAT 375 - Numerical Analysis</li>
-                        <li>STA 215 - Statistical Inference</li>
-                    </ul>
+                <div class="form-group">
+                    <label class="form-label">Course Code</label>
+                    <input type="text" id="addCode" class="form-input" placeholder="e.g., CHE 201">
                 </div>
-                
-                <div class="suggestion-category">
-                    <h4>🧪 STEM Electives</h4>
-                    <ul>
-                        <li>CHE 201/202 - General Chemistry I & II</li>
-                        <li>CSC 151/220 - Computer Science I & II</li>
-                        <li>BIO 201/202 - Cell & Organismal Biology</li>
-                        <li>ENG 120 - Engineering Graphics</li>
-                        <li>Additional MAT courses</li>
-                        <li>Advanced Chemistry courses</li>
-                        <li>Computational courses</li>
-                        <li>Engineering fundamentals</li>
-                    </ul>
+                <div class="form-group">
+                    <label class="form-label">Course Name</label>
+                    <input type="text" id="addName" class="form-input" placeholder="e.g., General Chemistry I">
                 </div>
-                
-                <div class="suggestion-category">
-                    <h4>🎓 College Core Areas</h4>
-                    <ul>
-                        <li>Writing Intensive courses</li>
-                        <li>Social Justice: Race & Ethnicity</li>
-                        <li>Social Justice: Community Engagement</li>
-                        <li>Literary, Visual, or Performing Arts</li>
-                        <li>Behavioral, Social, or Cultural Perspectives</li>
-                        <li>World Views and Ways of Knowing</li>
-                        <li>Quantitative Reasoning</li>
-                        <li>Natural Science with Lab</li>
-                    </ul>
+                <div class="form-group">
+                    <label class="form-label">Units</label>
+                    <input type="number" id="addUnits" class="form-input" step="0.25" min="0" max="4" value="1">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select id="addCategory" class="form-select">
+                        <option value="core">Physics Core</option>
+                        <option value="math">Math Minor</option>
+                        <option value="option">Physics Option</option>
+                        <option value="stem">STEM Elective</option>
+                        <option value="core-req">College Core Requirement</option>
+                        <option value="capstone">Capstone</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Schedule Info</label>
+                    <input type="text" id="addSchedule" class="form-input" placeholder="e.g., Every Semester • 1 unit • Lab">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Prerequisites</label>
+                    <input type="text" id="addPrereqs" class="form-input" placeholder="e.g., CHE 200 or permission">
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button class="btn btn-primary" onclick="saveNewCourse()" style="flex: 1;">
+                        <i class="fas fa-plus"></i>
+                        Add Course
+                    </button>
+                    <button class="btn btn-secondary" onclick="closeAddModal()" style="flex: 1;">
+                        <i class="fas fa-times"></i>
+                        Cancel
+                    </button>
                 </div>
             </div>
-        </div>
-        
-        <div style="text-align: center; margin-top: 30px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-            <p style="color: #6b7280; font-size: 0.9em;">
-                💡 <strong>How to Use:</strong> Click courses to mark complete • Click ✏️ to edit course details • Use Export/Import to save your progress
-            </p>
-            <p style="color: #6b7280; font-size: 0.8em; margin-top: 10px;">
-                Based on TCNJ's current requirements. Always verify with your academic advisor.
-            </p>
         </div>
     </div>
 
     <script>
+        // Course data storage
         let courseData = {};
+        let currentEditingCourse = null;
+        let currentSemester = 'fall2024';
         
-        // Initialize course data
+        // Sample schedule data for different semesters
+        const scheduleData = {
+            'fall2024': {
+                'phy203': { day: 'mon', time: '9', duration: 2 },
+                'mat127': { day: 'tue', time: '10', duration: 1 },
+                'fsp': { day: 'wed', time: '14', duration: 1 }
+            },
+            'spring2025': {
+                'phy204': { day: 'mon', time: '9', duration: 2 },
+                'mat128': { day: 'tue', time: '10', duration: 1 }
+            }
+        };
+
+        // Initialize the planner
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCourseData();
+            loadFromLocalStorage();
+            updateScheduleView();
+        });
+
         function initializeCourseData() {
-            const courses = document.querySelectorAll('.course');
-            courses.forEach(course => {
-                const id = course.getAttribute('data-course-id');
-                const codeElement = course.querySelector('.course-code');
-                const nameElement = course.querySelector('.course-name');
-                const unitsElement = course.querySelector('.course-units');
+            const courseCards = document.querySelectorAll('.course-card');
+            courseCards.forEach(card => {
+                const courseId = card.getAttribute('data-course');
+                const code = card.querySelector('.course-code').textContent;
+                const name = card.querySelector('.course-name').textContent;
+                const schedule = card.querySelector('.course-schedule').textContent;
+                const category = card.querySelector('.course-tag').className.split(' ')[1].replace('tag-', '');
                 
-                courseData[id] = {
-                    code: codeElement.textContent,
-                    name: nameElement.textContent,
-                    units: parseFloat(unitsElement.textContent.replace(' units', '').replace(' unit', '')),
-                    completed: false
+                courseData[courseId] = {
+                    code: code,
+                    name: name,
+                    schedule: schedule,
+                    category: category,
+                    completed: false,
+                    semester: getSemesterFromCard(card)
                 };
             });
-            updateProgress();
         }
-        
-        // Toggle course completion
-        function toggleCompletion(courseId) {
-            courseData[courseId].completed = !courseData[courseId].completed;
-            const courseElement = document.querySelector(`[data-course-id="${courseId}"]`);
-            const checkbox = courseElement.querySelector('.checkbox');
+
+        function getSemesterFromCard(card) {
+            const yearColumn = card.closest('.year-column');
+            const semesterSection = card.closest('.semester-section');
+            
+            if (!yearColumn || !semesterSection) return '';
+            
+            const yearTitle = yearColumn.querySelector('.year-title').textContent.toLowerCase();
+            const semesterTitle = semesterSection.querySelector('.semester-title').textContent.toLowerCase();
+            
+            let year = '';
+            if (yearTitle.includes('freshman')) year = 'freshman';
+            else if (yearTitle.includes('sophomore')) year = 'sophomore';
+            else if (yearTitle.includes('junior')) year = 'junior';
+            else if (yearTitle.includes('senior')) year = 'senior';
+            
+            let semester = '';
+            if (semesterTitle.includes('fall')) semester = 'fall';
+            else if (semesterTitle.includes('spring')) semester = 'spring';
+            
+            return `${year}-${semester}`;
+        }
+
+        function toggleCourse(checkbox) {
+            const courseCard = checkbox.closest('.course-card');
+            const courseId = courseCard.getAttribute('data-course');
             
             if (courseData[courseId].completed) {
-                courseElement.classList.add('completed');
-                checkbox.classList.add('checked');
-                checkbox.innerHTML = '✓';
-            } else {
-                courseElement.classList.remove('completed');
+                // Mark as incomplete
+                courseData[courseId].completed = false;
                 checkbox.classList.remove('checked');
                 checkbox.innerHTML = '';
+                courseCard.classList.remove('completed');
+            } else {
+                // Mark as complete
+                courseData[courseId].completed = true;
+                checkbox.classList.add('checked');
+                checkbox.innerHTML = '<i class="fas fa-check"></i>';
+                courseCard.classList.add('completed');
             }
             
-            updateProgress();
             saveToLocalStorage();
         }
-        
-        // Edit course functions
-        function toggleEdit(courseId) {
-            const editDiv = document.getElementById(`edit-${courseId}`);
-            const isActive = editDiv.classList.contains('active');
+
+        function editCourse(courseId) {
+            currentEditingCourse = courseId;
+            const course = courseData[courseId];
             
-            // Close all other edit forms
-            document.querySelectorAll('.edit-course').forEach(el => el.classList.remove('active'));
+            document.getElementById('editCode').value = course.code;
+            document.getElementById('editName').value = course.name;
+            document.getElementById('editUnits').value = course.units || 1;
+            document.getElementById('editCategory').value = course.category;
+            document.getElementById('editSchedule').value = course.schedule;
+            document.getElementById('editPrereqs').value = course.prereqs || '';
             
-            if (!isActive) {
-                editDiv.classList.add('active');
-                // Populate edit form with current values
-                const data = courseData[courseId];
-                document.getElementById(`code-${courseId}`).value = data.code;
-                document.getElementById(`name-${courseId}`).value = data.name;
-                document.getElementById(`units-${courseId}`).value = data.units;
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function saveCourseEdit() {
+            if (!currentEditingCourse) return;
+            
+            const course = courseData[currentEditingCourse];
+            course.code = document.getElementById('editCode').value;
+            course.name = document.getElementById('editName').value;
+            course.units = document.getElementById('editUnits').value;
+            course.category = document.getElementById('editCategory').value;
+            course.schedule = document.getElementById('editSchedule').value;
+            course.prereqs = document.getElementById('editPrereqs').value;
+            
+            // Update the UI
+            const courseCard = document.querySelector(`[data-course="${currentEditingCourse}"]`);
+            courseCard.querySelector('.course-code').textContent = course.code;
+            courseCard.querySelector('.course-name').textContent = course.name;
+            courseCard.querySelector('.course-schedule').textContent = course.schedule;
+            
+            // Update category tag
+            const tag = courseCard.querySelector('.course-tag');
+            tag.className = `course-tag tag-${course.category}`;
+            
+            // Update prereqs
+            let prereqDiv = courseCard.querySelector('.prereq-indicator');
+            if (course.prereqs) {
+                if (!prereqDiv) {
+                    prereqDiv = document.createElement('div');
+                    prereqDiv.className = 'prereq-indicator';
+                    courseCard.querySelector('.course-info').appendChild(prereqDiv);
+                }
+                prereqDiv.innerHTML = `<i class="fas fa-link"></i> Prereq: ${course.prereqs}`;
+            } else if (prereqDiv) {
+                prereqDiv.remove();
+            }
+            
+            saveToLocalStorage();
+            closeModal();
+        }
+
+        function closeModal() {
+            document.getElementById('editModal').classList.remove('active');
+            currentEditingCourse = null;
+        }
+
+        function addCourse(semesterId) {
+            document.getElementById('addSemester').value = semesterId;
+            document.getElementById('addModal').classList.add('active');
+        }
+
+        function saveNewCourse() {
+            const semesterId = document.getElementById('addSemester').value;
+            const code = document.getElementById('addCode').value;
+            const name = document.getElementById('addName').value;
+            const units = document.getElementById('addUnits').value;
+            const category = document.getElementById('addCategory').value;
+            const schedule = document.getElementById('addSchedule').value;
+            const prereqs = document.getElementById('addPrereqs').value;
+            
+            if (!code || !name) {
+                alert('Please fill in the course code and name.');
+                return;
+            }
+            
+            const courseId = `custom-${Date.now()}`;
+            
+            // Add to course data
+            courseData[courseId] = {
+                code: code,
+                name: name,
+                units: units,
+                category: category,
+                schedule: schedule,
+                prereqs: prereqs,
+                completed: false,
+                semester: semesterId
+            };
+            
+            // Create course card HTML
+            const courseCardHTML = `
+                <div class="course-card" data-course="${courseId}">
+                    <div class="course-actions">
+                        <button class="action-btn" onclick="editCourse('${courseId}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn" onclick="deleteCourse('${courseId}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="course-header">
+                        <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                        <div class="course-info">
+                            <div class="course-code">${code}</div>
+                            <div class="course-name">${name}</div>
+                            <div class="course-meta">
+                                <div class="course-tag tag-${category}">${getCategoryLabel(category)}</div>
+                            </div>
+                            <div class="course-schedule">
+                                <i class="fas fa-clock"></i>
+                                ${schedule}
+                            </div>
+                            ${prereqs ? `<div class="prereq-indicator"><i class="fas fa-link"></i> Prereq: ${prereqs}</div>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Add to the appropriate semester
+            document.getElementById(semesterId).insertAdjacentHTML('beforeend', courseCardHTML);
+            
+            saveToLocalStorage();
+            closeAddModal();
+        }
+
+        function deleteCourse(courseId) {
+            if (confirm('Are you sure you want to delete this course?')) {
+                delete courseData[courseId];
+                document.querySelector(`[data-course="${courseId}"]`).remove();
+                saveToLocalStorage();
             }
         }
-        
-        function saveCourse(courseId) {
-            const code = document.getElementById(`code-${courseId}`).value;
-            const name = document.getElementById(`name-${courseId}`).value;
-            const units = parseFloat(document.getElementById(`units-${courseId}`).value);
-            
-            // Update course data
-            courseData[courseId].code = code;
-            courseData[courseId].name = name;
-            courseData[courseId].units = units;
-            
-            // Update display
-            const courseElement = document.querySelector(`[data-course-id="${courseId}"]`);
-            courseElement.querySelector('.course-code').textContent = code;
-            courseElement.querySelector('.course-name').textContent = name;
-            courseElement.querySelector('.course-units').textContent = `${units} unit${units !== 1 ? 's' : ''}`;
-            
-            // Close edit form
-            document.getElementById(`edit-${courseId}`).classList.remove('active');
-            
-            updateProgress();
-            saveToLocalStorage();
+
+        function getCategoryLabel(category) {
+            const labels = {
+                'core': 'Core',
+                'math': 'Math',
+                'option': 'Option',
+                'stem': 'STEM',
+                'core-req': 'Core Req',
+                'capstone': 'Capstone'
+            };
+            return labels[category] || 'Other';
         }
-        
-        function cancelEdit(courseId) {
-            document.getElementById(`edit-${courseId}`).classList.remove('active');
+
+        function closeAddModal() {
+            document.getElementById('addModal').classList.remove('active');
+            // Clear form
+            document.getElementById('addCode').value = '';
+            document.getElementById('addName').value = '';
+            document.getElementById('addUnits').value = '1';
+            document.getElementById('addCategory').value = 'core';
+            document.getElementById('addSchedule').value = '';
+            document.getElementById('addPrereqs').value = '';
         }
-        
-        // Progress tracking
-        function updateProgress() {
-            const totalCourses = Object.keys(courseData).length;
-            const completedCourses = Object.values(courseData).filter(course => course.completed).length;
-            const totalUnits = Object.values(courseData).reduce((sum, course) => sum + course.units, 0);
-            const completedUnits = Object.values(courseData).filter(course => course.completed).reduce((sum, course) => sum + course.units, 0);
-            const progressPercent = Math.round((completedCourses / totalCourses) * 100);
+
+        function showSchedule(semester) {
+            currentSemester = semester;
             
-            document.getElementById('completedCourses').textContent = completedCourses;
-            document.getElementById('totalCourses').textContent = totalCourses;
-            document.getElementById('completedUnits').textContent = completedUnits.toFixed(2);
-            document.getElementById('progressPercent').textContent = `${progressPercent}%`;
-            document.getElementById('progressFill').style.width = `${progressPercent}%`;
+            // Update active tab
+            document.querySelectorAll('.semester-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            updateScheduleView();
         }
-        
-        // Data persistence
-        function saveToLocalStorage() {
-            localStorage.setItem('tcnjDegreePlan', JSON.stringify(courseData));
-        }
-        
-        function loadFromLocalStorage() {
-            const saved = localStorage.getItem('tcnjDegreePlan');
-            if (saved) {
-                const savedData = JSON.parse(saved);
-                Object.keys(savedData).forEach(courseId => {
-                    if (courseData[courseId]) {
-                        courseData[courseId] = savedData[courseId];
-                        
-                        // Update display
-                        const courseElement = document.querySelector(`[data-course-id="${courseId}"]`);
-                        if (courseElement) {
-                            courseElement.querySelector('.course-code').textContent = savedData[courseId].code;
-                            courseElement.querySelector('.course-name').textContent = savedData[courseId].name;
-                            courseElement.querySelector('.course-units').textContent = `${savedData[courseId].units} unit${savedData[courseId].units !== 1 ? 's' : ''}`;
-                            
-                            if (savedData[courseId].completed) {
-                                courseElement.classList.add('completed');
-                                courseElement.querySelector('.checkbox').classList.add('checked');
-                                courseElement.querySelector('.checkbox').innerHTML = '✓';
-                            }
-                        }
+
+        function updateScheduleView() {
+            // Clear all schedule cells
+            document.querySelectorAll('.schedule-cell').forEach(cell => {
+                cell.classList.remove('has-class');
+                cell.textContent = '';
+            });
+            
+            // Add courses to schedule
+            const semesterSchedule = scheduleData[currentSemester] || {};
+            Object.entries(semesterSchedule).forEach(([courseId, scheduleInfo]) => {
+                const course = courseData[courseId];
+                if (course) {
+                    const cellId = `${scheduleInfo.day}-${scheduleInfo.time}`;
+                    const cell = document.getElementById(cellId);
+                    if (cell) {
+                        cell.classList.add('has-class');
+                        cell.textContent = course.code;
+                        cell.title = course.name;
                     }
-                });
-                updateProgress();
+                }
+            });
+        }
+
+        function generateGoogleCalendar() {
+            const calendarURL = 'https://calendar.google.com/calendar/render?action=TEMPLATE';
+            const completedCourses = Object.values(courseData).filter(course => course.completed);
+            
+            if (completedCourses.length === 0) {
+                alert('Please mark some courses as completed first.');
+                return;
+            }
+            
+            // Create a summary of the completed courses
+            const summary = `TCNJ Physics + Math Minor - Completed Courses (${completedCourses.length} courses)`;
+            const details = completedCourses.map(course => `${course.code}: ${course.name}`).join('\\n');
+            
+            const params = new URLSearchParams({
+                text: summary,
+                details: details,
+                dates: '20240901T000000Z/20280531T000000Z', // 4-year span
+                location: 'The College of New Jersey'
+            });
+            
+            window.open(`${calendarURL}&${params.toString()}`, '_blank');
+        }
+
+        function addToSchedule() {
+            const time = prompt('Enter time (e.g., 9 for 9:00 AM):');
+            const day = prompt('Enter day (mon, tue, wed, thu, fri):');
+            const courseCode = prompt('Enter course code:');
+            
+            if (time && day && courseCode) {
+                const cellId = `${day}-${time}`;
+                const cell = document.getElementById(cellId);
+                if (cell) {
+                    cell.classList.add('has-class');
+                    cell.textContent = courseCode;
+                }
             }
         }
-        
-        // Export/Import functions
-        function exportData() {
+
+        function clearSchedule() {
+            if (confirm('Clear the current schedule view?')) {
+                document.querySelectorAll('.schedule-cell').forEach(cell => {
+                    cell.classList.remove('has-class');
+                    cell.textContent = '';
+                });
+            }
+        }
+
+        function exportToGoogleCalendar() {
+            generateGoogleCalendar();
+        }
+
+        function saveToFile() {
             const dataStr = JSON.stringify(courseData, null, 2);
             const dataBlob = new Blob([dataStr], { type: 'application/json' });
             const url = URL.createObjectURL(dataBlob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = 'tcnj_degree_plan.json';
+            link.download = 'tcnj-degree-plan.json';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
         }
-        
-        function importData(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        const importedData = JSON.parse(e.target.result);
-                        courseData = importedData;
+
+        function saveToLocalStorage() {
+            localStorage.setItem('tcnjDegreeData', JSON.stringify(courseData));
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('tcnjDegreeData');
+            if (saved) {
+                const savedData = JSON.parse(saved);
+                Object.keys(savedData).forEach(courseId => {
+                    if (courseData[courseId]) {
+                        courseData[courseId] = { ...courseData[courseId], ...savedData[courseId] };
                         
-                        // Update all course displays
-                        Object.keys(courseData).forEach(courseId => {
-                            const courseElement = document.querySelector(`[data-course-id="${courseId}"]`);
-                            if (courseElement) {
-                                const data = courseData[courseId];
-                                courseElement.querySelector('.course-code').textContent = data.code;
-                                courseElement.querySelector('.course-name').textContent = data.name;
-                                courseElement.querySelector('.course-units').textContent = `${data.units} unit${data.units !== 1 ? 's' : ''}`;
-                                
-                                // Reset completion status
-                                courseElement.classList.remove('completed');
-                                courseElement.querySelector('.checkbox').classList.remove('checked');
-                                courseElement.querySelector('.checkbox').innerHTML = '';
-                                
-                                if (data.completed) {
-                                    courseElement.classList.add('completed');
-                                    courseElement.querySelector('.checkbox').classList.add('checked');
-                                    courseElement.querySelector('.checkbox').innerHTML = '✓';
-                                }
-                            }
-                        });
-                        
-                        updateProgress();
-                        saveToLocalStorage();
-                        alert('Plan imported successfully!');
-                    } catch (error) {
-                        alert('Error importing file. Please check the format.');
+                        // Update UI
+                        const courseCard = document.querySelector(`[data-course="${courseId}"]`);
+                        if (courseCard && savedData[courseId].completed) {
+                            const checkbox = courseCard.querySelector('.course-checkbox');
+                            checkbox.classList.add('checked');
+                            checkbox.innerHTML = '<i class="fas fa-check"></i>';
+                            courseCard.classList.add('completed');
+                        }
                     }
-                };
-                reader.readAsText(file);
-            }
-        }
-        
-        function resetProgress() {
-            if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
-                Object.keys(courseData).forEach(courseId => {
-                    courseData[courseId].completed = false;
-                    const courseElement = document.querySelector(`[data-course-id="${courseId}"]`);
-                    courseElement.classList.remove('completed');
-                    courseElement.querySelector('.checkbox').classList.remove('checked');
-                    courseElement.querySelector('.checkbox').innerHTML = '';
                 });
-                updateProgress();
-                saveToLocalStorage();
             }
         }
-        
-        // Event listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeCourseData();
-            loadFromLocalStorage();
+
+        // Close modals when clicking outside
+        window.addEventListener('click', function(event) {
+            const editModal = document.getElementById('editModal');
+            const addModal = document.getElementById('addModal');
             
-            // Add click listeners to all courses
-            document.querySelectorAll('.course').forEach(course => {
-                course.addEventListener('click', function(e) {
-                    // Don't toggle if clicking on edit button
-                    if (e.target.classList.contains('btn-edit') || e.target.tagName === 'BUTTON') {
-                        return;
-                    }
-                    
-                    const courseId = this.getAttribute('data-course-id');
-                    toggleCompletion(courseId);
-                });
-            });
+            if (event.target === editModal) {
+                closeModal();
+            }
+            if (event.target === addModal) {
+                closeAddModal();
+            }
         });
     </script>
 </body>
-</html>
+</html>phy099">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('phy099')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">PHY 099</div>
+                                    <div class="course-name">Orientation to Physics</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-core">Core</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Fall Only • 0 units
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card" data-course="phy203">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('phy203')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">PHY 203</div>
+                                    <div class="course-name">Physics I for Physicists</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-core">Core</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Every Semester • 1 unit • Lab
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card" data-course="mat127">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('mat127')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">MAT 127</div>
+                                    <div class="course-name">Calculus A</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-math">Math</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Every Semester • 1 unit
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card" data-course="fsp">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('fsp')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">FSP 1XX</div>
+                                    <div class="course-name">First Seminar Program</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-core-req">Core Req</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Every Semester • 1 unit
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="semester-section">
+                    <div class="semester-header">
+                        <div class="semester-title">
+                            <div class="semester-icon spring-icon">🌸</div>
+                            Spring 2025
+                        </div>
+                        <button class="add-course-btn" onclick="addCourse('freshman-spring')">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div id="freshman-spring">
+                        <div class="course-card" data-course="phy204">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('phy204')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">PHY 204</div>
+                                    <div class="course-name">Physics II for Physicists</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-core">Core</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Every Semester • 1 unit • Lab
+                                    </div>
+                                    <div class="prereq-indicator">
+                                        <i class="fas fa-link"></i>
+                                        Prereq: PHY 203, MAT 127
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card" data-course="mat128">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('mat128')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">MAT 128</div>
+                                    <div class="course-name">Calculus B</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-math">Math</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Every Semester • 1 unit
+                                    </div>
+                                    <div class="prereq-indicator">
+                                        <i class="fas fa-link"></i>
+                                        Prereq: MAT 127
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card" data-course="lang1">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('lang1')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">LANG</div>
+                                    <div class="course-name">Second Language I</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-core-req">Core Req</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Every Semester • 1 unit
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card" data-course="core1">
+                            <div class="course-actions">
+                                <button class="action-btn" onclick="editCourse('core1')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="course-header">
+                                <div class="course-checkbox" onclick="toggleCourse(this)"></div>
+                                <div class="course-info">
+                                    <div class="course-code">CORE</div>
+                                    <div class="course-name">College Core Course</div>
+                                    <div class="course-meta">
+                                        <div class="course-tag tag-core-req">Core Req</div>
+                                    </div>
+                                    <div class="course-schedule">
+                                        <i class="fas fa-clock"></i>
+                                        Various Times • 1 unit
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sophomore Year -->
+            <div class="year-column">
+                <div class="year-header">
+                    <div class="year-title">Sophomore Year</div>
+                    <div class="year-subtitle">2025-2026</div>
+                </div>
+                
+                <div class="semester-section">
+                    <div class="semester-header">
+                        <div class="semester-title">
+                            <div class="semester-icon fall-icon">🍂</div>
+                            Fall 2025
+                        </div>
+                        <button class="add-course-btn" onclick="addCourse('sophomore-fall')">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div id="sophomore-fall">
+                        <div class="course-card" data-course="
