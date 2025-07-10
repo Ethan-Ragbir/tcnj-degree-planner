@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TCNJ Physics + Math Minor Planner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            color: #2563eb;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .progress-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: #10b981;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .stat-number {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2563eb;
+        }
+        
+        .years-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+        }
+        
+        .year-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .year-title {
+            font-size: 1.5em;
+            color: #2563eb;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
+        }
+        
+        .semester {
+            margin-bottom: 25px;
+        }
+        
+        .semester-title {
+            font-size: 1.2em;
+            color: #4b5563;
+            margin-bottom: 15px;
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .course {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .course:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .course.completed {
+            background-color: #d1fae5;
+            border-color: #10b981;
+        }
+        
+        .course.physics-core {
+            background-color: #dbeafe;
+            border-color: #3b82f6;
+        }
+        
+        .course.math-minor {
+            background-color: #fce7f3;
+            border-color: #ec4899;
+        }
+        
+        .course.physics-options {
+            background-color: #d1fae5;
+            border-color: #10b981;
+        }
+        
+        .course.stem-elective {
+            background-color: #fed7aa;
+            border-color: #f97316;
+        }
+        
+        .course.college-core {
+            background-color: #fef3c7;
+            border-color: #f59e0b;
+        }
+        
+        .course.capstone {
+            background-color: #e0e7ff;
+            border-color: #6366f1;
+        }
+        
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #6b7280;
+            border-radius: 4px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+        
+        .checkbox.checked {
+            background-color: #10b981;
+            border-color: #10b981;
+            color: white;
+        }
+        
+        .course-info {
+            flex-grow: 1;
+        }
+        
+        .course-code {
+            font-weight: bold;
+            color: #1f2937;
+        }
+        
+        .course-name {
+            color: #6b7280;
+            font-size: 0.9em;
+        }
+        
+        .course-units {
+            background-color: #f3f4f6;
+            color: #4b5563;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin-left: 10px;
+            flex-shrink: 0;
+        }
+        
+        .category-tag {
+            font-size: 0.7em;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 5px;
+            flex-shrink: 0;
+        }
+        
+        .edit-course {
+            margin-top: 10px;
+            padding: 8px;
+            background-color: #f9fafb;
+            border-radius: 6px;
+            display: none;
+        }
+        
+        .edit-course.active {
+            display: block;
+        }
+        
+        .edit-course input {
+            width: 100%;
+            padding: 4px 8px;
+            margin: 2px 0;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+        }
+        
+        .edit-buttons {
+            margin-top: 8px;
+        }
+        
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 8px;
+            font-size: 0.8em;
+        }
+        
+        .btn-save {
+            background-color: #10b981;
+            color: white;
+        }
+        
+        .btn-cancel {
+            background-color: #6b7280;
+            color: white;
+        }
+        
+        .btn-edit {
+            background-color: #f3f4f6;
+            color: #4b5563;
+            font-size: 0.7em;
+            padding: 4px 8px;
+        }
+        
+        .actions {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .btn-primary {
+            background-color: #2563eb;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 0 10px;
+            font-size: 1em;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+        }
+        
+        .suggestions {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .suggestions h3 {
+            color: #2563eb;
+            margin-bottom: 15px;
+        }
+        
+        .suggestions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .suggestion-category h4 {
+            color: #4b5563;
+            margin-bottom: 10px;
+        }
+        
+        .suggestion-category ul {
+            list-style: none;
+        }
+        
+        .suggestion-category li {
+            padding: 4px 0;
+            color: #6b7280;
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 768px) {
+            .years-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 TCNJ Physics + Math Minor Planner</h1>
+            <p>Click courses to mark as completed • Right-click to edit • Track your progress!</p>
+        </div>
+        
+        <div class="progress-section">
+            <h2>📊 Your Progress</h2>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number" id="completedCourses">0</div>
+                    <div>Courses Completed</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="totalCourses">32</div>
+                    <div>Total Courses</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="completedUnits">0</div>
+                    <div>Units Completed</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="progressPercent">0%</div>
+                    <div>Progress</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="years-grid">
+            <div class="year-section">
+                <div class="year-title">👶 Freshman Year</div>
+                
+                <div class="semester">
+                    <div class="semester-title">🍂 Fall Semester</div>
+                    <div class="course physics-core" data-course-id="phy099">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">PHY 099</div>
+                            <div class="course-name">Orientation to Physics</div>
+                        </div>
+                        <div class="course-units">0 units</div>
+                        <div class="category-tag">Core</div>
+                        <button class="btn-edit" onclick="toggleEdit('phy099')">✏️</button>
+                    </div>
+                    <div class="edit-course" id="edit-phy099">
+                        <input type="text" id="code-phy099" placeholder="Course Code" value="PHY 099">
+                        <input type="text" id="name-phy099" placeholder="Course Name" value="Orientation to Physics">
+                        <input type="number" id="units-phy099" placeholder="Units" value="0" step="0.25">
+                        <div class="edit-buttons">
+                            <button class="btn btn-save" onclick="saveCourse('phy099')">💾 Save</button>
+                            <button class="btn btn-cancel" onclick="cancelEdit('phy099')">❌ Cancel</button>
+                        </div>
+                    </div>
+                    
+                    <div class="course physics-core" data-course-id="phy203">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">PHY 203</div>
+                            <div class="course-name">General Physics I</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">Core</div>
+                        <button class="btn-edit" onclick="toggleEdit('phy203')">✏️</button>
+                    </div>
+                    
+                    <div class="course math-minor" data-course-id="mat127">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">MAT 127</div>
+                            <div class="course-name">Calculus A</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">Math</div>
+                        <button class="btn-edit" onclick="toggleEdit('mat127')">✏️</button>
+                    </div>
+                    
+                    <div class="course college-core" data-course-id="fsp">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">FSP 1XX</div>
+                            <div class="course-name">First Seminar Program</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">Core</div>
+                        <button class="btn-edit" onclick="toggleEdit('fsp')">✏️</button>
+                    </div>
+                </div>
+                
+                <div class="semester">
+                    <div class="semester-title">🌸 Spring Semester</div>
+                    <div class="course physics-core" data-course-id="phy204">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">PHY 204</div>
+                            <div class="course-name">General Physics II</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">Core</div>
+                        <button class="btn-edit" onclick="toggleEdit('phy204')">✏️</button>
+                    </div>
+                    
+                    <div class="course math-minor" data-course-id="mat128">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">MAT 128</div>
+                            <div class="course-name">Calculus B</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">Math</div>
+                        <button class="btn-edit" onclick="toggleEdit('mat128')">✏️</button>
+                    </div>
+                    
+                    <div class="course college-core" data-course-id="lang1">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">LANG</div>
+                            <div class="course-name">Second Language I</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">Core</div>
+                        <button class="btn-edit" onclick="toggleEdit('lang1')">✏️</button>
+                    </div>
+                    
+                    <div class="course college-core" data-course-id="core1">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">CORE</div>
+                            <div class="course-name">College Core Course</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">Core</div>
+                        <button class="btn-edit" onclick="toggleEdit('core1')">✏️</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="year-section">
+                <div class="year-title">🎓 Sophomore Year</div>
+                
+                <div class="semester">
+                    <div class="semester-title">🍂 Fall Semester</div>
+                    <div class="course physics-core" data-course-id="phy299">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">PHY 299</div>
+                            <div class="course-name">Sophomore Seminar</div>
+                        </div>
+                        <div class="course-units">0.25 units</div>
+                        <div class="category-tag">Core</div>
+                        <button class="btn-edit" onclick="toggleEdit('phy299')">✏️</button>
+                    </div>
+                    
+                    <div class="course math-minor" data-course-id="mat229">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">MAT 229</div>
+                            <div class="course-name">Multivariable Calculus</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">Math</div>
+                        <button class="btn-edit" onclick="toggleEdit('mat229')">✏️</button>
+                    </div>
+                    
+                    <div class="course math-minor" data-course-id="mat205">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">MAT 205</div>
+                            <div class="course-name">Linear Algebra</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">Math</div>
+                        <button class="btn-edit" onclick="toggleEdit('mat205')">✏️</button>
+                    </div>
+                    
+                    <div class="course college-core" data-course-id="lang2">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">LANG</div>
+                            <div class="course-name">Second Language II</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">Core</div>
+                        <button class="btn-edit" onclick="toggleEdit('lang2')">✏️</button>
+                    </div>
+                </div>
+                
+                <div class="semester">
+                    <div class="semester-title">🌸 Spring Semester</div>
+                    <div class="course physics-core" data-course-id="phy306">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">PHY 306</div>
+                            <div class="course-name">Mathematical Methods for Physicists</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">Core</div>
+                        <button class="btn-edit" onclick="toggleEdit('phy306')">✏️</button>
+                    </div>
+                    
+                    <div class="course physics-core" data-course-id="phy321">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">PHY 321</div>
+                            <div class="course-name">Modern Physics</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">Core</div>
+                        <button class="btn-edit" onclick="toggleEdit('phy321')">✏️</button>
+                    </div>
+                    
+                    <div class="course math-minor" data-course-id="mat310">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">MAT 310</div>
+                            <div class="course-name">Differential Equations</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">Math</div>
+                        <button class="btn-edit" onclick="toggleEdit('mat310')">✏️</button>
+                    </div>
+                    
+                    <div class="course college-core" data-course-id="core2">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">CORE</div>
+                            <div class="course-name">College Core Course</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">Core</div>
+                        <button class="btn-edit" onclick="toggleEdit('core2')">✏️</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="year-section">
+                <div class="year-title">🔬 Junior Year</div>
+                
+                <div class="semester">
+                    <div class="semester-title">🍂 Fall Semester</div>
+                    <div class="course physics-core" data-course-id="phy356">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">PHY 356</div>
+                            <div class="course-name">Classical Mechanics</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">Core</div>
+                        <button class="btn-edit" onclick="toggleEdit('phy356')">✏️</button>
+                    </div>
+                    
+                    <div class="course physics-options" data-course-id="phyopt1">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">PHY 3XX</div>
+                            <div class="course-name">Physics Option Course</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">Option</div>
+                        <button class="btn-edit" onclick="toggleEdit('phyopt1')">✏️</button>
+                    </div>
+                    
+                    <div class="course math-minor" data-course-id="matadv">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">MAT 3XX</div>
+                            <div class="course-name">Advanced Math Course</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">Math</div>
+                        <button class="btn-edit" onclick="toggleEdit('matadv')">✏️</button>
+                    </div>
+                    
+                    <div class="course stem-elective" data-course-id="stem1">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">STEM</div>
+                            <div class="course-name">STEM Elective (200+ level)</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">STEM</div>
+                        <button class="btn-edit" onclick="toggleEdit('stem1')">✏️</button>
+                    </div>
+                </div>
+                
+                <div class="semester">
+                    <div class="semester-title">🌸 Spring Semester</div>
+                    <div class="course physics-core" data-course-id="phy401">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">PHY 401</div>
+                            <div class="course-name">Electricity & Magnetism</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">Core</div>
+                        <button class="btn-edit" onclick="toggleEdit('phy401')">✏️</button>
+                    </div>
+                    
+                    <div class="course physics-options" data-course-id="phyopt2">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">PHY 3XX</div>
+                            <div class="course-name">Physics Option (w/ lab)</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">Option</div>
+                        <button class="btn-edit" onclick="toggleEdit('phyopt2')">✏️</button>
+                    </div>
+                    
+                    <div class="course stem-elective" data-course-id="stem2">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">STEM</div>
+                            <div class="course-name">STEM Elective (200+ level)</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">STEM</div>
+                        <button class="btn-edit" onclick="toggleEdit('stem2')">✏️</button>
+                    </div>
+                    
+                    <div class="course college-core" data-course-id="core3">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">CORE</div>
+                            <div class="course-name">College Core Course</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">Core</div>
+                        <button class="btn-edit" onclick="toggleEdit('core3')">✏️</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="year-section">
+                <div class="year-title">🎉 Senior Year</div>
+                
+                <div class="semester">
+                    <div class="semester-title">🍂 Fall Semester</div>
+                    <div class="course physics-core" data-course-id="phy421">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">PHY 421</div>
+                            <div class="course-name">Quantum Mechanics</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">Core</div>
+                        <button class="btn-edit" onclick="toggleEdit('phy421')">✏️</button>
+                    </div>
+                    
+                    <div class="course physics-options" data-course-id="phyopt3">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">PHY 3XX</div>
+                            <div class="course-name">Physics Option Course</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">Option</div>
+                        <button class="btn-edit" onclick="toggleEdit('phyopt3')">✏️</button>
+                    </div>
+                    
+                    <div class="course stem-elective" data-course-id="stem3">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">STEM</div>
+                            <div class="course-name">STEM Elective</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">STEM</div>
+                        <button class="btn-edit" onclick="toggleEdit('stem3')">✏️</button>
+                    </div>
+                    
+                    <div class="course college-core" data-course-id="core4">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">CORE</div>
+                            <div class="course-name">College Core Course</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">Core</div>
+                        <button class="btn-edit" onclick="toggleEdit('core4')">✏️</button>
+                    </div>
+                </div>
+                
+                <div class="semester">
+                    <div class="semester-title">🌸 Spring Semester</div>
+                    <div class="course capstone" data-course-id="phy451">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">PHY 451</div>
+                            <div class="course-name">Senior Thesis/Research</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">Capstone</div>
+                        <button class="btn-edit" onclick="toggleEdit('phy451')">✏️</button>
+                    </div>
+                    
+                    <div class="course physics-options" data-course-id="phyopt4">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">PHY 3XX</div>
+                            <div class="course-name">Physics Option Course</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">Option</div>
+                        <button class="btn-edit" onclick="toggleEdit('phyopt4')">✏️</button>
+                    </div>
+                    
+                    <div class="course stem-elective" data-course-id="stem4">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">STEM</div>
+                            <div class="course-name">STEM Elective</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">STEM</div>
+                        <button class="btn-edit" onclick="toggleEdit('stem4')">✏️</button>
+                    </div>
+                    
+                    <div class="course stem-elective" data-course-id="stem5">
+                        <div class="checkbox"></div>
+                        <div class="course-info">
+                            <div class="course-code">STEM</div>
+                            <div class="course-name">STEM Elective</div>
+                        </div>
+                        <div class="course-units">1 unit</div>
+                        <div class="category-tag">STEM</div>
+                        <button class="btn-edit" onclick="toggleEdit('stem5')">✏️</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <button class="btn-primary" onclick="exportData()">💾 Export Plan</button>
+            <button class="btn-primary" onclick="document.getElementById('importFile').click()">📁 Import Plan</button>
+            <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
+            <button class="btn-primary" onclick="resetProgress()">🔄 Reset All</button>
+        </div>
+        
+        <div class="suggestions">
+            <h3>📚 Course Suggestions & Options</h3>
+            <div class="suggestions-grid">
+                <div class="suggestion-category">
+                    <h4>🔬 Physics Options</h4>
+                    <ul>
+                        <li>PHY 220 - Advanced Geology (lab)</li>
+                        <li>PHY 311 - Electronics</li>
+                        <li>PHY 345 - Thermal Physics</li>
+                        <li>PHY 361 - Introduction to Astrophysics</li>
+                        <li>PHY 393 - Independent Study</li>
+                        <li>PHY 411 - Advanced Laboratory</li>
+                        <li>PHY 413 - Stellar Astronomy</li>
+                        <li>PHY 425 - Condensed Matter Physics</li>
+                        <li>PHY 426 - Particle Physics</li>
+                        <li>PHY 431 - Fluid Dynamics</li>
+                        <li>PHY 466 - Extragalactic Astronomy</li>
+                    </ul>
+                </div>
+                
+                <div class="suggestion-category">
+                    <h4>🔢 Math Minor Options</h4>
+                    <ul>
+                        <li>MAT 200 - Proof Writing Through Discrete Math</li>
+                        <li>MAT 305 - Number Theory</li>
+                        <li>MAT 320 - Real Analysis</li>
+                        <li>MAT 330 - Complex Analysis</li>
+                        <li>MAT 350 - Abstract Algebra</li>
+                        <li>MAT 365 - Probability Theory</li>
+                        <li>MAT 375 - Numerical Analysis</li>
+                        <li>STA 215 - Statistical Inference</li>
+                    </ul>
+                </div>
+                
+                <div class="suggestion-category">
+                    <h4>🧪 STEM Electives</h4>
+                    <ul>
+                        <li>CHE 201/202 - General Chemistry I & II</li>
+                        <li>CSC 151/220 - Computer Science I & II</li>
+                        <li>BIO 201/202 - Cell & Organismal Biology</li>
+                        <li>ENG 120 - Engineering Graphics</li>
+                        <li>Additional MAT courses</li>
+                        <li>Advanced Chemistry courses</li>
+                        <li>Computational courses</li>
+                        <li>Engineering fundamentals</li>
+                    </ul>
+                </div>
+                
+                <div class="suggestion-category">
+                    <h4>🎓 College Core Areas</h4>
+                    <ul>
+                        <li>Writing Intensive courses</li>
+                        <li>Social Justice: Race & Ethnicity</li>
+                        <li>Social Justice: Community Engagement</li>
+                        <li>Literary, Visual, or Performing Arts</li>
+                        <li>Behavioral, Social, or Cultural Perspectives</li>
+                        <li>World Views and Ways of Knowing</li>
+                        <li>Quantitative Reasoning</li>
+                        <li>Natural Science with Lab</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <p style="color: #6b7280; font-size: 0.9em;">
+                💡 <strong>How to Use:</strong> Click courses to mark complete • Click ✏️ to edit course details • Use Export/Import to save your progress
+            </p>
+            <p style="color: #6b7280; font-size: 0.8em; margin-top: 10px;">
+                Based on TCNJ's current requirements. Always verify with your academic advisor.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let courseData = {};
+        
+        // Initialize course data
+        function initializeCourseData() {
+            const courses = document.querySelectorAll('.course');
+            courses.forEach(course => {
+                const id = course.getAttribute('data-course-id');
+                const codeElement = course.querySelector('.course-code');
+                const nameElement = course.querySelector('.course-name');
+                const unitsElement = course.querySelector('.course-units');
+                
+                courseData[id] = {
+                    code: codeElement.textContent,
+                    name: nameElement.textContent,
+                    units: parseFloat(unitsElement.textContent.replace(' units', '').replace(' unit', '')),
+                    completed: false
+                };
+            });
+            updateProgress();
+        }
+        
+        // Toggle course completion
+        function toggleCompletion(courseId) {
+            courseData[courseId].completed = !courseData[courseId].completed;
+            const courseElement = document.querySelector(`[data-course-id="${courseId}"]`);
+            const checkbox = courseElement.querySelector('.checkbox');
+            
+            if (courseData[courseId].completed) {
+                courseElement.classList.add('completed');
+                checkbox.classList.add('checked');
+                checkbox.innerHTML = '✓';
+            } else {
+                courseElement.classList.remove('completed');
+                checkbox.classList.remove('checked');
+                checkbox.innerHTML = '';
+            }
+            
+            updateProgress();
+            saveToLocalStorage();
+        }
+        
+        // Edit course functions
+        function toggleEdit(courseId) {
+            const editDiv = document.getElementById(`edit-${courseId}`);
+            const isActive = editDiv.classList.contains('active');
+            
+            // Close all other edit forms
+            document.querySelectorAll('.edit-course').forEach(el => el.classList.remove('active'));
+            
+            if (!isActive) {
+                editDiv.classList.add('active');
+                // Populate edit form with current values
+                const data = courseData[courseId];
+                document.getElementById(`code-${courseId}`).value = data.code;
+                document.getElementById(`name-${courseId}`).value = data.name;
+                document.getElementById(`units-${courseId}`).value = data.units;
+            }
+        }
+        
+        function saveCourse(courseId) {
+            const code = document.getElementById(`code-${courseId}`).value;
+            const name = document.getElementById(`name-${courseId}`).value;
+            const units = parseFloat(document.getElementById(`units-${courseId}`).value);
+            
+            // Update course data
+            courseData[courseId].code = code;
+            courseData[courseId].name = name;
+            courseData[courseId].units = units;
+            
+            // Update display
+            const courseElement = document.querySelector(`[data-course-id="${courseId}"]`);
+            courseElement.querySelector('.course-code').textContent = code;
+            courseElement.querySelector('.course-name').textContent = name;
+            courseElement.querySelector('.course-units').textContent = `${units} unit${units !== 1 ? 's' : ''}`;
+            
+            // Close edit form
+            document.getElementById(`edit-${courseId}`).classList.remove('active');
+            
+            updateProgress();
+            saveToLocalStorage();
+        }
+        
+        function cancelEdit(courseId) {
+            document.getElementById(`edit-${courseId}`).classList.remove('active');
+        }
+        
+        // Progress tracking
+        function updateProgress() {
+            const totalCourses = Object.keys(courseData).length;
+            const completedCourses = Object.values(courseData).filter(course => course.completed).length;
+            const totalUnits = Object.values(courseData).reduce((sum, course) => sum + course.units, 0);
+            const completedUnits = Object.values(courseData).filter(course => course.completed).reduce((sum, course) => sum + course.units, 0);
+            const progressPercent = Math.round((completedCourses / totalCourses) * 100);
+            
+            document.getElementById('completedCourses').textContent = completedCourses;
+            document.getElementById('totalCourses').textContent = totalCourses;
+            document.getElementById('completedUnits').textContent = completedUnits.toFixed(2);
+            document.getElementById('progressPercent').textContent = `${progressPercent}%`;
+            document.getElementById('progressFill').style.width = `${progressPercent}%`;
+        }
+        
+        // Data persistence
+        function saveToLocalStorage() {
+            localStorage.setItem('tcnjDegreePlan', JSON.stringify(courseData));
+        }
+        
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('tcnjDegreePlan');
+            if (saved) {
+                const savedData = JSON.parse(saved);
+                Object.keys(savedData).forEach(courseId => {
+                    if (courseData[courseId]) {
+                        courseData[courseId] = savedData[courseId];
+                        
+                        // Update display
+                        const courseElement = document.querySelector(`[data-course-id="${courseId}"]`);
+                        if (courseElement) {
+                            courseElement.querySelector('.course-code').textContent = savedData[courseId].code;
+                            courseElement.querySelector('.course-name').textContent = savedData[courseId].name;
+                            courseElement.querySelector('.course-units').textContent = `${savedData[courseId].units} unit${savedData[courseId].units !== 1 ? 's' : ''}`;
+                            
+                            if (savedData[courseId].completed) {
+                                courseElement.classList.add('completed');
+                                courseElement.querySelector('.checkbox').classList.add('checked');
+                                courseElement.querySelector('.checkbox').innerHTML = '✓';
+                            }
+                        }
+                    }
+                });
+                updateProgress();
+            }
+        }
+        
+        // Export/Import functions
+        function exportData() {
+            const dataStr = JSON.stringify(courseData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'tcnj_degree_plan.json';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+        
+        function importData(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        courseData = importedData;
+                        
+                        // Update all course displays
+                        Object.keys(courseData).forEach(courseId => {
+                            const courseElement = document.querySelector(`[data-course-id="${courseId}"]`);
+                            if (courseElement) {
+                                const data = courseData[courseId];
+                                courseElement.querySelector('.course-code').textContent = data.code;
+                                courseElement.querySelector('.course-name').textContent = data.name;
+                                courseElement.querySelector('.course-units').textContent = `${data.units} unit${data.units !== 1 ? 's' : ''}`;
+                                
+                                // Reset completion status
+                                courseElement.classList.remove('completed');
+                                courseElement.querySelector('.checkbox').classList.remove('checked');
+                                courseElement.querySelector('.checkbox').innerHTML = '';
+                                
+                                if (data.completed) {
+                                    courseElement.classList.add('completed');
+                                    courseElement.querySelector('.checkbox').classList.add('checked');
+                                    courseElement.querySelector('.checkbox').innerHTML = '✓';
+                                }
+                            }
+                        });
+                        
+                        updateProgress();
+                        saveToLocalStorage();
+                        alert('Plan imported successfully!');
+                    } catch (error) {
+                        alert('Error importing file. Please check the format.');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+        
+        function resetProgress() {
+            if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+                Object.keys(courseData).forEach(courseId => {
+                    courseData[courseId].completed = false;
+                    const courseElement = document.querySelector(`[data-course-id="${courseId}"]`);
+                    courseElement.classList.remove('completed');
+                    courseElement.querySelector('.checkbox').classList.remove('checked');
+                    courseElement.querySelector('.checkbox').innerHTML = '';
+                });
+                updateProgress();
+                saveToLocalStorage();
+            }
+        }
+        
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCourseData();
+            loadFromLocalStorage();
+            
+            // Add click listeners to all courses
+            document.querySelectorAll('.course').forEach(course => {
+                course.addEventListener('click', function(e) {
+                    // Don't toggle if clicking on edit button
+                    if (e.target.classList.contains('btn-edit') || e.target.tagName === 'BUTTON') {
+                        return;
+                    }
+                    
+                    const courseId = this.getAttribute('data-course-id');
+                    toggleCompletion(courseId);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
