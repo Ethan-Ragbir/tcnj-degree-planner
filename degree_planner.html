@@ -8,9 +8,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary: #0f0f23;
-            --accent: #6366f1;
-            --accent-light: #8b5cf6;
+            --primary: #003A74; /* TCNJ Blue */
+            --accent: #FDBB30;  /* TCNJ Gold */
+            --accent-light: #FFC107; /* Lighter gold for gradients */
             --success: #10b981;
             --warning: #f59e0b;
             --danger: #ef4444;
@@ -28,7 +28,7 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, #005b9f 100%);
             min-height: 100vh;
             color: var(--text);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -66,7 +66,7 @@
         .nav-logo {
             width: 50px;
             height: 50px;
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
             border-radius: 16px;
             display: flex;
             align-items: center;
@@ -74,7 +74,7 @@
             color: white;
             font-size: 1.2rem;
             font-weight: 700;
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 8px 25px rgba(0, 58, 116, 0.3);
             transition: transform 0.3s ease;
         }
 
@@ -135,14 +135,14 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
             color: white;
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 8px 25px rgba(0, 58, 116, 0.3);
         }
 
         .btn-primary:hover {
             transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 15px 35px rgba(0, 58, 116, 0.4);
         }
 
         .btn-secondary {
@@ -231,7 +231,7 @@
         }
 
         .planner-header {
-            background: linear-gradient(135deg, var(--primary) 0%, #1a1a2e 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, #005b9f 100%);
             padding: 2rem;
             color: white;
             text-align: center;
@@ -292,7 +292,7 @@
             height: 40px;
             border-radius: 50%;
             background: var(--accent);
-            color: white;
+            color: var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -339,12 +339,12 @@
         }
 
         .fall-icon {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            color: white;
+            background: linear-gradient(135deg, var(--accent) 0%, #e6a700 100%);
+            color: var(--primary);
         }
 
         .spring-icon {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
             color: white;
         }
 
@@ -524,7 +524,7 @@
 
         .action-btn:hover {
             background: var(--accent);
-            color: white;
+            color: var(--primary);
             transform: scale(1.1);
         }
 
@@ -569,7 +569,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-ustria;
         }
 
         .modal-title {
@@ -620,7 +619,7 @@ ustria;
         .form-input:focus, .form-select:focus {
             outline: none;
             border-color: var(--accent);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            box-shadow: 0 0 0 4px rgba(253, 187, 48, 0.1);
             transform: translateY(-1px);
         }
 
@@ -653,7 +652,7 @@ ustria;
                 <div class="progress-ring">
                     <svg width="60" height="60">
                         <circle cx="30" cy="30" r="26" fill="none" stroke="#f1f5f9" stroke-width="4"></circle>
-                        <circle cx="30" cy="30" r="26" fill="none" stroke="#6366f1" stroke-width="4" 
+                        <circle cx="30" cy="30" r="26" fill="none" stroke="var(--accent)" stroke-width="4" 
                                 stroke-linecap="round" stroke-dasharray="163.36" stroke-dashoffset="130" id="progressCircle"></circle>
                     </svg>
                     <div class="progress-text" id="progressText">20%</div>
@@ -738,13 +737,13 @@ ustria;
                                             </div>
                                             <div class="course-info">
                                                 <div class="course-code">PHY 203</div>
-                                                <div class="course-name">Physics I for Physicists Vomiting</div>
+                                                <div class="course-name">Physics I for Physicists</div>
                                                 <div class="course-meta">
                                                     <div class="course-tag tag-core">Core</div>
                                                 </div>
                                                 <div class="course-schedule">
                                                     <i class="fas fa-clock"></i>
-                                                    <span>Every Semester • 4 credits • Lab</span>
+                                                    <span>Every Semester • Lab • 4 credits</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -934,10 +933,16 @@ ustria;
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title" id="modalTitle">Add Course</h2>
-                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <button class="modal-close" onclick="closeModal()">×</button>
             </div>
             <div class="modal-body">
                 <form id="courseForm">
+                    <div class="form-group">
+                        <label class="form-label" for="courseSelect">Select Course</label>
+                        <select id="courseSelect" class="form-select">
+                            <option value="">-- Select a course --</option>
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label class="form-label" for="courseCode">Course Code</label>
                         <input type="text" id="courseCode" class="form-input" required>
@@ -953,11 +958,10 @@ ustria;
                     <div class="form-group">
                         <label class="form-label" for="courseType">Type</label>
                         <select id="courseType" class="form-select">
-                            <option value="core">Core</option>
+                            <option value="core">Physics Core</option>
                             <option value="math">Math</option>
-                            <option value="option">Option</option>
-                            <option value="stem">STEM</option>
-                            <option value="core-req">Core Requirement</option>
+                            <option value="core-req">College Core</option>
+                            <option value="option">Physics Option</option>
                             <option value="capstone">Capstone</option>
                         </select>
                     </div>
@@ -972,18 +976,62 @@ ustria;
     </div>
 
     <script>
+        // Course data based on TCNJ catalog
+        const availableCourses = [
+            // Physics Core
+            { code: "PHY 203", name: "Physics I for Physicists", credits: 4, type: "core", schedule: "Every Semester • Lab" },
+            { code: "PHY 204", name: "Physics II for Physicists", credits: 4, type: "core", schedule: "Every Semester • Lab" },
+            { code: "PHY 321", name: "Modern Physics", credits: 4, type: "core", schedule: "Every Fall" },
+            { code: "PHY 401", name: "Classical Mechanics", credits: 4, type: "core", schedule: "Every Fall" },
+            { code: "PHY 421", name: "Thermal Physics", credits: 4, type: "core", schedule: "Every Spring" },
+            { code: "PHY 431", name: "Quantum Mechanics", credits: 4, type: "core", schedule: "Every Fall" },
+            { code: "PHY 451", name: "Electromagnetic Fields and Waves", credits: 4, type: "core", schedule: "Every Spring" },
+            // Math Minor
+            { code: "MAT 127", name: "Calculus A", credits: 4, type: "math", schedule: "Every Semester" },
+            { code: "MAT 128", name: "Calculus B", credits: 4, type: "math", schedule: "Every Semester" },
+            { code: "MAT 229", name: "Multivariable Calculus", credits: 4, type: "math", schedule: "Every Semester" },
+            { code: "MAT 205", name: "Linear Algebra", credits: 4, type: "math", schedule: "Every Semester" },
+            { code: "MAT 255", name: "Differential Equations", credits: 4, type: "math", schedule: "Every Semester" },
+            // College Core (Sample)
+            { code: "FYS 100", name: "First Year Seminar", credits: 4, type: "core-req", schedule: "Every Fall" },
+            { code: "WRI 102", name: "Academic Writing", credits: 4, type: "core-req", schedule: "Every Semester" },
+            { code: "HIS 100", name: "World History", credits: 4, type: "core-req", schedule: "Every Semester" },
+            { code: "SOC 101", name: "Introduction to Sociology", credits: 4, type: "core-req", schedule: "Every Semester" },
+            // Physics Options (Sample)
+            { code: "PHY 316", name: "Optics", credits: 4, type: "option", schedule: "Every Spring" },
+            { code: "PHY 466", name: "Nuclear and Particle Physics", credits: 4, type: "option", schedule: "Fall (Odd Years)" },
+            // Capstone
+            { code: "PHY 451", name: "Senior Capstone", credits: 4, type: "capstone", schedule: "Every Spring" }
+        ];
+
         // Modal functions
         function openModal(mode = 'add', semesterId = '', courseId = '') {
             const modal = document.getElementById('courseModal');
             const title = document.getElementById('modalTitle');
             const form = document.getElementById('courseForm');
-            
+            const courseSelect = document.getElementById('courseSelect');
+
+            // Populate course dropdown
+            courseSelect.innerHTML = '<option value="">-- Select a course --</option>';
+            availableCourses.forEach(course => {
+                const option = document.createElement('option');
+                option.value = course.code;
+                option.textContent = `${course.code} - ${course.name}`;
+                courseSelect.appendChild(option);
+            });
+
             if (mode === 'add') {
                 title.textContent = 'Add Course';
                 form.onsubmit = function(e) {
                     e.preventDefault();
                     addCourseSubmit(semesterId);
                 };
+                document.getElementById('courseCode').value = '';
+                document.getElementById('courseName').value = '';
+                document.getElementById('courseCredits').value = '';
+                document.getElementById('courseType').value = '';
+                document.getElementById('courseSchedule').value = '';
+                courseSelect.value = '';
             } else if (mode === 'edit') {
                 title.textContent = 'Edit Course';
                 loadCourseData(courseId);
@@ -996,10 +1044,32 @@ ustria;
             modal.classList.add('active');
         }
 
+        // Auto-fill form when a course is selected
+        document.getElementById('courseSelect').addEventListener('change', function() {
+            const selectedCode = this.value;
+            if (selectedCode) {
+                const selectedCourse = availableCourses.find(course => course.code === selectedCode);
+                if (selectedCourse) {
+                    document.getElementById('courseCode').value = selectedCourse.code;
+                    document.getElementById('courseName').value = selectedCourse.name;
+                    document.getElementById('courseCredits').value = selectedCourse.credits;
+                    document.getElementById('courseType').value = selectedCourse.type;
+                    document.getElementById('courseSchedule').value = selectedCourse.schedule;
+                }
+            } else {
+                document.getElementById('courseCode').value = '';
+                document.getElementById('courseName').value = '';
+                document.getElementById('courseCredits').value = '';
+                document.getElementById('courseType').value = '';
+                document.getElementById('courseSchedule').value = '';
+            }
+        });
+
         function closeModal() {
             const modal = document.getElementById('courseModal');
             modal.classList.remove('active');
             document.getElementById('courseForm').reset();
+            document.getElementById('courseSelect').value = '';
         }
 
         // Add course
@@ -1014,7 +1084,7 @@ ustria;
             const type = document.getElementById('courseType').value;
             const schedule = document.getElementById('courseSchedule').value;
             
-            const courseId = 'course-' + Date.now();
+            const courseId = code.toLowerCase().replace(/\s+/g, '');
             
             const courseHTML = `
                 <div class="course-card" data-course="${courseId}">
@@ -1062,14 +1132,17 @@ ustria;
             const code = courseCard.querySelector('.course-code').textContent;
             const name = courseCard.querySelector('.course-name').textContent;
             const scheduleText = courseCard.querySelector('.course-schedule span').textContent;
-            const credits = scheduleText.split(' • ')[1].split(' ')[0];
+            const parts = scheduleText.split(' • ');
+            const credits = parseInt(parts[parts.length - 1].split(' ')[0]);
+            const schedule = parts.slice(0, -1).join(' • ');
             const type = courseCard.querySelector('.course-tag').textContent.toLowerCase();
             
             document.getElementById('courseCode').value = code;
             document.getElementById('courseName').value = name;
             document.getElementById('courseCredits').value = credits;
             document.getElementById('courseType').value = type;
-            document.getElementById('courseSchedule').value = scheduleText.split(' • ')[0];
+            document.getElementById('courseSchedule').value = schedule;
+            document.getElementById('courseSelect').value = code;
         }
 
         function editCourseSubmit(courseId) {
@@ -1085,6 +1158,7 @@ ustria;
             courseCard.querySelector('.course-tag').textContent = type.charAt(0).toUpperCase() + type.slice(1);
             courseCard.querySelector('.course-tag').className = `course-tag tag-${type}`;
             courseCard.querySelector('.course-schedule span').textContent = `${schedule} • ${credits} credits`;
+            courseCard.setAttribute('data-course', code.toLowerCase().replace(/\s+/g, ''));
             
             const semesterId = courseCard.closest('.courses-container').id;
             updateStats(semesterId);
@@ -1115,16 +1189,33 @@ ustria;
             const semesterContainer = document.getElementById(semesterId);
             const courses = semesterContainer.querySelectorAll('.course-card');
             let totalCredits = 0;
+            let physicsCoreCount = 0;
+            let mathMinorCount = 0;
+            let completedCredits = 0;
+
             courses.forEach(course => {
                 const creditsText = course.querySelector('.course-schedule span').textContent;
-                const credits = parseInt(creditsText.split(' • ')[1]) || 0;
+                const credits = parseInt(creditsText.split(' • ')[creditsText.split(' • ').length - 1]) || 0;
                 totalCredits += credits;
+                if (course.classList.contains('completed')) {
+                    completedCredits += credits;
+                }
+                const type = course.querySelector('.course-tag').textContent.toLowerCase();
+                if (type === 'core') physicsCoreCount++;
+                if (type === 'math') mathMinorCount++;
             });
+
             const courseCount = courses.length;
             const statsElement = semesterContainer.previousElementSibling.querySelector('.semester-stats');
             statsElement.textContent = `${courseCount} courses • ${totalCredits} credits`;
 
-            // Update overall progress (simplified)
+            // Update sidebar stats
+            document.getElementById('completedCredits').textContent = completedCredits;
+            document.getElementById('remainingCredits').textContent = 128 - completedCredits;
+            document.getElementById('physicsCore').textContent = `${physicsCoreCount}/11`;
+            document.getElementById('mathMinor').textContent = `${mathMinorCount}/5`;
+
+            // Update overall progress
             const allCourses = document.querySelectorAll('.course-card').length;
             const completedCourses = document.querySelectorAll('.course-card.completed').length;
             const progress = allCourses > 0 ? Math.round((completedCourses / allCourses) * 100) : 0;
@@ -1133,9 +1224,16 @@ ustria;
             const circumference = 2 * Math.PI * 26;
             const offset = circumference - (progress / 100) * circumference;
             progressCircle.style.strokeDashoffset = offset;
+
+            // Update year progress
+            const yearColumn = semesterContainer.closest('.year-column');
+            const yearCourses = yearColumn.querySelectorAll('.course-card');
+            const yearCompleted = yearColumn.querySelectorAll('.course-card.completed').length;
+            const yearProgress = yearCourses.length > 0 ? Math.round((yearCompleted / yearCourses.length) * 100) : 0;
+            yearColumn.querySelector('.year-progress').textContent = `${yearProgress}%`;
         }
 
-        // Placeholder functions (to be implemented later)
+        // Placeholder functions
         function exportData() {
             alert('Export feature coming soon!');
         }
@@ -1144,7 +1242,7 @@ ustria;
             alert('Settings feature coming soon!');
         }
 
-        // Initial stats update
+        // Initialize stats
         updateStats('freshman-fall');
     </script>
 </body>
