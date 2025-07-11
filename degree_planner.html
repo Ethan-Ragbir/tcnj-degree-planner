@@ -3,17 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TCNJ Physics + Math Minor - Degree Planner</title>
+    <title>TCNJ Physics + Math - Degree Planner</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary: #003A74; /* TCNJ Blue */
-            --accent: #FDBB30;  /* TCNJ Gold */
-            --accent-light: #FFC107; /* Lighter gold for gradients */
+            --primary: #003A74;
+            --accent: #FDBB30;
             --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
             --surface: #ffffff;
             --surface-dark: #f8fafc;
             --border: rgba(148, 163, 184, 0.15);
@@ -131,7 +128,6 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            text-decoration: none;
         }
 
         .btn-primary {
@@ -269,6 +265,7 @@
             border-bottom: 1px solid var(--border);
             text-align: center;
             position: relative;
+            cursor: pointer;
         }
 
         .year-title {
@@ -316,6 +313,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            cursor: pointer;
         }
 
         .semester-title {
@@ -368,7 +366,7 @@
             border: 2px solid var(--border);
             border-radius: 16px;
             padding: 1rem;
-            cursor: pointer;
+            cursor: move;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
         }
@@ -446,7 +444,6 @@
         .tag-core { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); color: #1e40af; }
         .tag-math { background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%); color: #be185d; }
         .tag-option { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); color: #065f46; }
-        .tag-stem { background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%); color: #c2410c; }
         .tag-core-req { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); color: #92400e; }
         .tag-capstone { background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); color: #3730a3; }
 
@@ -459,16 +456,12 @@
             margin-bottom: 0.5rem;
         }
 
-        .prereq-indicator {
-            font-size: 0.7rem;
-            color: var(--danger);
+        .course-instructor {
+            font-size: 0.75rem;
+            color: var(--text-muted);
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.5rem;
-            background: rgba(239, 68, 68, 0.1);
-            border-radius: 8px;
-            margin-top: 0.5rem;
         }
 
         .add-course-btn {
@@ -623,12 +616,57 @@
             transform: translateY(-1px);
         }
 
+        .settings-panel {
+            position: fixed;
+            top: 80px;
+            right: -300px;
+            width: 300px;
+            height: calc(100% - 80px);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid var(--border);
+            box-shadow: var(--shadow-medium);
+            z-index: 1500;
+            transition: right 0.4s ease;
+        }
+
+        .settings-panel.active { right: 0; }
+
+        .settings-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .settings-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .settings-close:hover { color: var(--text); }
+
+        .settings-body { padding: 1.5rem; }
+
+        .setting-item {
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
         @media (max-width: 1400px) {
             .years-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
         @media (max-width: 1024px) {
             .dashboard-grid { grid-template-columns: 1fr; }
+            .sidebar { position: relative; top: 0; }
         }
 
         @media (max-width: 768px) {
@@ -661,7 +699,7 @@
                     <i class="fas fa-download"></i>
                     Export
                 </button>
-                <button class="btn btn-primary" onclick="openSettings()">
+                <button class="btn btn-primary" onclick="toggleSettings()">
                     <i class="fas fa-cog"></i>
                     Settings
                 </button>
@@ -705,220 +743,159 @@
                     </div>
 
                     <div class="years-grid">
-                        <!-- Freshman Year -->
                         <div class="year-column">
-                            <div class="year-header">
+                            <div class="year-header" onclick="toggleYear(this)">
                                 <div class="year-progress">25%</div>
                                 <div class="year-title">Freshman</div>
                                 <div class="year-subtitle">2024-2025</div>
                             </div>
-                            
                             <div class="semester-section">
-                                <div class="semester-header">
+                                <div class="semester-header" onclick="toggleSemester(this.parentElement)">
                                     <div class="semester-title">
                                         <div class="semester-icon fall-icon">🍂</div>
                                         Fall 2024
                                     </div>
-                                    <div class="semester-stats">2 courses • 8 credits</div>
+                                    <div class="semester-stats" id="freshman-fall-stats">2 courses • 8 credits</div>
                                 </div>
-                                <div class="courses-container" id="freshman-fall">
-                                    <div class="course-card completed" data-course="phy203">
+                                <div class="courses-container" id="freshman-fall" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+                                    <div class="course-card completed" data-course="phy203" draggable="true" ondragstart="handleDragStart(event)">
                                         <div class="course-actions">
-                                            <button class="action-btn" onclick="editCourse('phy203')">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="action-btn" onclick="deleteCourse('phy203')">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
+                                            <button class="action-btn" onclick="editCourse('phy203')"><i class="fas fa-edit"></i></button>
+                                            <button class="action-btn" onclick="deleteCourse('phy203')"><i class="fas fa-trash"></i></button>
                                         </div>
                                         <div class="course-header">
-                                            <div class="course-checkbox checked" onclick="toggleCourse(this)">
-                                                <i class="fas fa-check"></i>
-                                            </div>
+                                            <div class="course-checkbox checked" onclick="toggleCourse(this)"><i class="fas fa-check"></i></div>
                                             <div class="course-info">
                                                 <div class="course-code">PHY 203</div>
                                                 <div class="course-name">Physics I for Physicists</div>
-                                                <div class="course-meta">
-                                                    <div class="course-tag tag-core">Core</div>
-                                                </div>
-                                                <div class="course-schedule">
-                                                    <i class="fas fa-clock"></i>
-                                                    <span>Every Semester • Lab • 4 credits</span>
-                                                </div>
+                                                <div class="course-meta"><div class="course-tag tag-core">Core</div></div>
+                                                <div class="course-schedule"><i class="fas fa-clock"></i><span>Every Semester • Lab • 4 credits</span></div>
+                                                <div class="course-instructor"><i class="fas fa-chalkboard-teacher"></i><span>Dr. Smith</span></div>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="course-card completed" data-course="mat127">
+                                    <div class="course-card completed" data-course="mat127" draggable="true" ondragstart="handleDragStart(event)">
                                         <div class="course-actions">
-                                            <button class="action-btn" onclick="editCourse('mat127')">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="action-btn" onclick="deleteCourse('mat127')">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
+                                            <button class="action-btn" onclick="editCourse('mat127')"><i class="fas fa-edit"></i></button>
+                                            <button class="action-btn" onclick="deleteCourse('mat127')"><i class="fas fa-trash"></i></button>
                                         </div>
                                         <div class="course-header">
-                                            <div class="course-checkbox checked" onclick="toggleCourse(this)">
-                                                <i class="fas fa-check"></i>
-                                            </div>
+                                            <div class="course-checkbox checked" onclick="toggleCourse(this)"><i class="fas fa-check"></i></div>
                                             <div class="course-info">
                                                 <div class="course-code">MAT 127</div>
                                                 <div class="course-name">Calculus A</div>
-                                                <div class="course-meta">
-                                                    <div class="course-tag tag-math">Math</div>
-                                                </div>
-                                                <div class="course-schedule">
-                                                    <i class="fas fa-clock"></i>
-                                                    <span>Every Semester • 4 credits</span>
-                                                </div>
+                                                <div class="course-meta"><div class="course-tag tag-math">Math</div></div>
+                                                <div class="course-schedule"><i class="fas fa-clock"></i><span>Every Semester • 4 credits</span></div>
+                                                <div class="course-instructor"><i class="fas fa-chalkboard-teacher"></i><span>Prof. Johnson</span></div>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="add-course-btn" onclick="addCourse('freshman-fall')">
-                                        <i class="fas fa-plus"></i>
-                                        <span>Add Course</span>
-                                    </div>
+                                    <div class="add-course-btn" onclick="addCourse('freshman-fall')"><i class="fas fa-plus"></i><span>Add Course</span></div>
                                 </div>
                             </div>
-
                             <div class="semester-section">
-                                <div class="semester-header">
+                                <div class="semester-header" onclick="toggleSemester(this.parentElement)">
                                     <div class="semester-title">
                                         <div class="semester-icon spring-icon">🌸</div>
                                         Spring 2025
                                     </div>
-                                    <div class="semester-stats">0 courses • 0 credits</div>
+                                    <div class="semester-stats" id="freshman-spring-stats">0 courses • 0 credits</div>
                                 </div>
-                                <div class="courses-container" id="freshman-spring">
-                                    <div class="add-course-btn" onclick="addCourse('freshman-spring')">
-                                        <i class="fas fa-plus"></i>
-                                        <span>Add Course</span>
-                                    </div>
+                                <div class="courses-container" id="freshman-spring" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+                                    <div class="add-course-btn" onclick="addCourse('freshman-spring')"><i class="fas fa-plus"></i><span>Add Course</span></div>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Sophomore Year -->
                         <div class="year-column">
-                            <div class="year-header">
+                            <div class="year-header" onclick="toggleYear(this)">
                                 <div class="year-progress">0%</div>
                                 <div class="year-title">Sophomore</div>
                                 <div class="year-subtitle">2025-2026</div>
                             </div>
-                            
-                            <div class="semester-section">
-                                <div class="semester-header">
+                            <div class="semester-section collapsed">
+                                <div class="semester-header" onclick="toggleSemester(this.parentElement)">
                                     <div class="semester-title">
                                         <div class="semester-icon fall-icon">🍂</div>
                                         Fall 2025
                                     </div>
-                                    <div class="semester-stats">0 courses • 0 credits</div>
+                                    <div class="semester-stats" id="sophomore-fall-stats">0 courses • 0 credits</div>
                                 </div>
-                                <div class="courses-container" id="sophomore-fall">
-                                    <div class="add-course-btn" onclick="addCourse('sophomore-fall')">
-                                        <i class="fas fa-plus"></i>
-                                        <span>Add Course</span>
-                                    </div>
+                                <div class="courses-container" id="sophomore-fall" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+                                    <div class="add-course-btn" onclick="addCourse('sophomore-fall')"><i class="fas fa-plus"></i><span>Add Course</span></div>
                                 </div>
                             </div>
-
-                            <div class="semester-section">
-                                <div class="semester-header">
+                            <div class="semester-section collapsed">
+                                <div class="semester-header" onclick="toggleSemester(this.parentElement)">
                                     <div class="semester-title">
                                         <div class="semester-icon spring-icon">🌸</div>
                                         Spring 2026
                                     </div>
-                                    <div class="semester-stats">0 courses • 0 credits</div>
+                                    <div class="semester-stats" id="sophomore-spring-stats">0 courses • 0 credits</div>
                                 </div>
-                                <div class="courses-container" id="sophomore-spring">
-                                    <div class="add-course-btn" onclick="addCourse('sophomore-spring')">
-                                        <i class="fas fa-plus"></i>
-                                        <span>Add Course</span>
-                                    </div>
+                                <div class="courses-container" id="sophomore-spring" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+                                    <div class="add-course-btn" onclick="addCourse('sophomore-spring')"><i class="fas fa-plus"></i><span>Add Course</span></div>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Junior Year -->
                         <div class="year-column">
-                            <div class="year-header">
+                            <div class="year-header" onclick="toggleYear(this)">
                                 <div class="year-progress">0%</div>
                                 <div class="year-title">Junior</div>
                                 <div class="year-subtitle">2026-2027</div>
                             </div>
-                            
-                            <div class="semester-section">
-                                <div class="semester-header">
+                            <div class="semester-section collapsed">
+                                <div class="semester-header" onclick="toggleSemester(this.parentElement)">
                                     <div class="semester-title">
                                         <div class="semester-icon fall-icon">🍂</div>
                                         Fall 2026
                                     </div>
-                                    <div class="semester-stats">0 courses • 0 credits</div>
+                                    <div class="semester-stats" id="junior-fall-stats">0 courses • 0 credits</div>
                                 </div>
-                                <div class="courses-container" id="junior-fall">
-                                    <div class="add-course-btn" onclick="addCourse('junior-fall')">
-                                        <i class="fas fa-plus"></i>
-                                        <span>Add Course</span>
-                                    </div>
+                                <div class="courses-container" id="junior-fall" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+                                    <div class="add-course-btn" onclick="addCourse('junior-fall')"><i class="fas fa-plus"></i><span>Add Course</span></div>
                                 </div>
                             </div>
-
-                            <div class="semester-section">
-                                <div class="semester-header">
+                            <div class="semester-section collapsed">
+                                <div class="semester-header" onclick="toggleSemester(this.parentElement)">
                                     <div class="semester-title">
                                         <div class="semester-icon spring-icon">🌸</div>
                                         Spring 2027
                                     </div>
-                                    <div class="semester-stats">0 courses • 0 credits</div>
+                                    <div class="semester-stats" id="junior-spring-stats">0 courses • 0 credits</div>
                                 </div>
-                                <div class="courses-container" id="junior-spring">
-                                    <div class="add-course-btn" onclick="addCourse('junior-spring')">
-                                        <i class="fas fa-plus"></i>
-                                        <span>Add Course</span>
-                                    </div>
+                                <div class="courses-container" id="junior-spring" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+                                    <div class="add-course-btn" onclick="addCourse('junior-spring')"><i class="fas fa-plus"></i><span>Add Course</span></div>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Senior Year -->
                         <div class="year-column">
-                            <div class="year-header">
+                            <div class="year-header" onclick="toggleYear(this)">
                                 <div class="year-progress">0%</div>
                                 <div class="year-title">Senior</div>
                                 <div class="year-subtitle">2027-2028</div>
                             </div>
-                            
-                            <div class="semester-section">
-                                <div class="semester-header">
+                            <div class="semester-section collapsed">
+                                <div class="semester-header" onclick="toggleSemester(this.parentElement)">
                                     <div class="semester-title">
                                         <div class="semester-icon fall-icon">🍂</div>
                                         Fall 2027
                                     </div>
-                                    <div class="semester-stats">0 courses • 0 credits</div>
+                                    <div class="semester-stats" id="senior-fall-stats">0 courses • 0 credits</div>
                                 </div>
-                                <div class="courses-container" id="senior-fall">
-                                    <div class="add-course-btn" onclick="addCourse('senior-fall')">
-                                        <i class="fas fa-plus"></i>
-                                        <span>Add Course</span>
-                                    </div>
+                                <div class="courses-container" id="senior-fall" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+                                    <div class="add-course-btn" onclick="addCourse('senior-fall')"><i class="fas fa-plus"></i><span>Add Course</span></div>
                                 </div>
                             </div>
-
-                            <div class="semester-section">
-                                <div class="semester-header">
+                            <div class="semester-section collapsed">
+                                <div class="semester-header" onclick="toggleSemester(this.parentElement)">
                                     <div class="semester-title">
                                         <div class="semester-icon spring-icon">🌸</div>
                                         Spring 2028
                                     </div>
-                                    <div class="semester-stats">0 courses • 0 credits</div>
+                                    <div class="semester-stats" id="senior-spring-stats">0 courses • 0 credits</div>
                                 </div>
-                                <div class="courses-container" id="senior-spring">
-                                    <div class="add-course-btn" onclick="addCourse('senior-spring')">
-                                        <i class="fas fa-plus"></i>
-                                        <span>Add Course</span>
-                                    </div>
+                                <div class="courses-container" id="senior-spring" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+                                    <div class="add-course-btn" onclick="addCourse('senior-spring')"><i class="fas fa-plus"></i><span>Add Course</span></div>
                                 </div>
                             </div>
                         </div>
@@ -928,7 +905,6 @@
         </div>
     </main>
 
-    <!-- Course Modal -->
     <div class="modal" id="courseModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -969,49 +945,52 @@
                         <label class="form-label" for="courseSchedule">Schedule</label>
                         <input type="text" id="courseSchedule" class="form-input" placeholder="e.g., Every Semester • Lab">
                     </div>
+                    <div class="form-group">
+                        <label class="form-label" for="courseInstructor">Instructor</label>
+                        <input type="text" id="courseInstructor" class="form-input" placeholder="e.g., Dr. Smith">
+                    </div>
                     <button type="submit" class="btn btn-primary">Save Course</button>
                 </form>
             </div>
         </div>
     </div>
 
+    <div class="settings-panel" id="settingsPanel">
+        <div class="settings-header">
+            <h2 class="modal-title">Settings</h2>
+            <button class="settings-close" onclick="toggleSettings()">×</button>
+        </div>
+        <div class="settings-body">
+            <div class="setting-item">
+                <span class="stat-label">Theme</span>
+                <select id="themeSelect" class="form-select" onchange="changeTheme()">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                </select>
+            </div>
+            <div class="setting-item">
+                <span class="stat-label">Export Format</span>
+                <select id="exportFormat" class="form-select">
+                    <option value="pdf">PDF</option>
+                    <option value="csv">CSV</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Course data based on TCNJ catalog
         const availableCourses = [
-            // Physics Core
             { code: "PHY 203", name: "Physics I for Physicists", credits: 4, type: "core", schedule: "Every Semester • Lab" },
-            { code: "PHY 204", name: "Physics II for Physicists", credits: 4, type: "core", schedule: "Every Semester • Lab" },
-            { code: "PHY 321", name: "Modern Physics", credits: 4, type: "core", schedule: "Every Fall" },
-            { code: "PHY 401", name: "Classical Mechanics", credits: 4, type: "core", schedule: "Every Fall" },
-            { code: "PHY 421", name: "Thermal Physics", credits: 4, type: "core", schedule: "Every Spring" },
-            { code: "PHY 431", name: "Quantum Mechanics", credits: 4, type: "core", schedule: "Every Fall" },
-            { code: "PHY 451", name: "Electromagnetic Fields and Waves", credits: 4, type: "core", schedule: "Every Spring" },
-            // Math Minor
             { code: "MAT 127", name: "Calculus A", credits: 4, type: "math", schedule: "Every Semester" },
-            { code: "MAT 128", name: "Calculus B", credits: 4, type: "math", schedule: "Every Semester" },
-            { code: "MAT 229", name: "Multivariable Calculus", credits: 4, type: "math", schedule: "Every Semester" },
-            { code: "MAT 205", name: "Linear Algebra", credits: 4, type: "math", schedule: "Every Semester" },
-            { code: "MAT 255", name: "Differential Equations", credits: 4, type: "math", schedule: "Every Semester" },
-            // College Core (Sample)
-            { code: "FYS 100", name: "First Year Seminar", credits: 4, type: "core-req", schedule: "Every Fall" },
-            { code: "WRI 102", name: "Academic Writing", credits: 4, type: "core-req", schedule: "Every Semester" },
-            { code: "HIS 100", name: "World History", credits: 4, type: "core-req", schedule: "Every Semester" },
-            { code: "SOC 101", name: "Introduction to Sociology", credits: 4, type: "core-req", schedule: "Every Semester" },
-            // Physics Options (Sample)
-            { code: "PHY 316", name: "Optics", credits: 4, type: "option", schedule: "Every Spring" },
-            { code: "PHY 466", name: "Nuclear and Particle Physics", credits: 4, type: "option", schedule: "Fall (Odd Years)" },
-            // Capstone
-            { code: "PHY 451", name: "Senior Capstone", credits: 4, type: "capstone", schedule: "Every Spring" }
+            { code: "PHY 204", name: "Physics II for Physicists", credits: 4, type: "core", schedule: "Every Semester • Lab" }
         ];
 
-        // Modal functions
         function openModal(mode = 'add', semesterId = '', courseId = '') {
             const modal = document.getElementById('courseModal');
             const title = document.getElementById('modalTitle');
             const form = document.getElementById('courseForm');
             const courseSelect = document.getElementById('courseSelect');
 
-            // Populate course dropdown
             courseSelect.innerHTML = '<option value="">-- Select a course --</option>';
             availableCourses.forEach(course => {
                 const option = document.createElement('option');
@@ -1022,60 +1001,45 @@
 
             if (mode === 'add') {
                 title.textContent = 'Add Course';
-                form.onsubmit = function(e) {
-                    e.preventDefault();
-                    addCourseSubmit(semesterId);
-                };
-                document.getElementById('courseCode').value = '';
-                document.getElementById('courseName').value = '';
-                document.getElementById('courseCredits').value = '';
-                document.getElementById('courseType').value = '';
-                document.getElementById('courseSchedule').value = '';
-                courseSelect.value = '';
+                form.onsubmit = (e) => { e.preventDefault(); addCourseSubmit(semesterId); };
+                resetForm();
             } else if (mode === 'edit') {
                 title.textContent = 'Edit Course';
                 loadCourseData(courseId);
-                form.onsubmit = function(e) {
-                    e.preventDefault();
-                    editCourseSubmit(courseId);
-                };
+                form.onsubmit = (e) => { e.preventDefault(); editCourseSubmit(courseId); };
             }
-            
             modal.classList.add('active');
         }
 
-        // Auto-fill form when a course is selected
-        document.getElementById('courseSelect').addEventListener('change', function() {
-            const selectedCode = this.value;
-            if (selectedCode) {
-                const selectedCourse = availableCourses.find(course => course.code === selectedCode);
-                if (selectedCourse) {
-                    document.getElementById('courseCode').value = selectedCourse.code;
-                    document.getElementById('courseName').value = selectedCourse.name;
-                    document.getElementById('courseCredits').value = selectedCourse.credits;
-                    document.getElementById('courseType').value = selectedCourse.type;
-                    document.getElementById('courseSchedule').value = selectedCourse.schedule;
-                }
-            } else {
-                document.getElementById('courseCode').value = '';
-                document.getElementById('courseName').value = '';
-                document.getElementById('courseCredits').value = '';
-                document.getElementById('courseType').value = '';
-                document.getElementById('courseSchedule').value = '';
-            }
-        });
-
-        function closeModal() {
-            const modal = document.getElementById('courseModal');
-            modal.classList.remove('active');
-            document.getElementById('courseForm').reset();
+        function resetForm() {
+            document.getElementById('courseCode').value = '';
+            document.getElementById('courseName').value = '';
+            document.getElementById('courseCredits').value = '';
+            document.getElementById('courseType').value = '';
+            document.getElementById('courseSchedule').value = '';
+            document.getElementById('courseInstructor').value = '';
             document.getElementById('courseSelect').value = '';
         }
 
-        // Add course
-        function addCourse(semesterId) {
-            openModal('add', semesterId);
+        document.getElementById('courseSelect').addEventListener('change', function() {
+            const selectedCode = this.value;
+            const selectedCourse = availableCourses.find(course => course.code === selectedCode);
+            if (selectedCourse) {
+                document.getElementById('courseCode').value = selectedCourse.code;
+                document.getElementById('courseName').value = selectedCourse.name;
+                document.getElementById('courseCredits').value = selectedCourse.credits;
+                document.getElementById('courseType').value = selectedCourse.type;
+                document.getElementById('courseSchedule').value = selectedCourse.schedule;
+                document.getElementById('courseInstructor').value = '';
+            } else resetForm();
+        });
+
+        function closeModal() {
+            document.getElementById('courseModal').classList.remove('active');
+            resetForm();
         }
+
+        function addCourse(semesterId) { openModal('add', semesterId); }
 
         function addCourseSubmit(semesterId) {
             const code = document.getElementById('courseCode').value;
@@ -1083,65 +1047,50 @@
             const credits = document.getElementById('courseCredits').value;
             const type = document.getElementById('courseType').value;
             const schedule = document.getElementById('courseSchedule').value;
-            
+            const instructor = document.getElementById('courseInstructor').value;
+
             const courseId = code.toLowerCase().replace(/\s+/g, '');
-            
             const courseHTML = `
-                <div class="course-card" data-course="${courseId}">
+                <div class="course-card" data-course="${courseId}" draggable="true" ondragstart="handleDragStart(event)">
                     <div class="course-actions">
-                        <button class="action-btn" onclick="editCourse('${courseId}')">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="action-btn" onclick="deleteCourse('${courseId}')">
-                            <i class="fas fa-trash"></i>
-                        </button>
+                        <button class="action-btn" onclick="editCourse('${courseId}')"><i class="fas fa-edit"></i></button>
+                        <button class="action-btn" onclick="deleteCourse('${courseId}')"><i class="fas fa-trash"></i></button>
                     </div>
                     <div class="course-header">
-                        <div class="course-checkbox" onclick="toggleCourse(this)">
-                            <i class="fas fa-check"></i>
-                        </div>
+                        <div class="course-checkbox" onclick="toggleCourse(this)"><i class="fas fa-check"></i></div>
                         <div class="course-info">
                             <div class="course-code">${code}</div>
                             <div class="course-name">${name}</div>
-                            <div class="course-meta">
-                                <div class="course-tag tag-${type}">${type.charAt(0).toUpperCase() + type.slice(1)}</div>
-                            </div>
-                            <div class="course-schedule">
-                                <i class="fas fa-clock"></i>
-                                <span>${schedule} • ${credits} credits</span>
-                            </div>
+                            <div class="course-meta"><div class="course-tag tag-${type}">${type.charAt(0).toUpperCase() + type.slice(1)}</div></div>
+                            <div class="course-schedule"><i class="fas fa-clock"></i><span>${schedule} • ${credits} credits</span></div>
+                            <div class="course-instructor"><i class="fas fa-chalkboard-teacher"></i><span>${instructor || 'TBA'}</span></div>
                         </div>
                     </div>
                 </div>
             `;
-            
-            const semesterContainer = document.getElementById(semesterId);
-            semesterContainer.insertAdjacentHTML('beforeend', courseHTML);
-            
+            document.getElementById(semesterId).insertAdjacentHTML('beforeend', courseHTML);
             updateStats(semesterId);
             closeModal();
         }
 
-        // Edit course
-        function editCourse(courseId) {
-            openModal('edit', '', courseId);
-        }
+        function editCourse(courseId) { openModal('edit', '', courseId); }
 
         function loadCourseData(courseId) {
             const courseCard = document.querySelector(`[data-course="${courseId}"]`);
             const code = courseCard.querySelector('.course-code').textContent;
             const name = courseCard.querySelector('.course-name').textContent;
             const scheduleText = courseCard.querySelector('.course-schedule span').textContent;
-            const parts = scheduleText.split(' • ');
-            const credits = parseInt(parts[parts.length - 1].split(' ')[0]);
-            const schedule = parts.slice(0, -1).join(' • ');
+            const credits = parseInt(scheduleText.split(' • ')[scheduleText.split(' • ').length - 1]);
+            const schedule = scheduleText.split(' • ').slice(0, -1).join(' • ');
             const type = courseCard.querySelector('.course-tag').textContent.toLowerCase();
-            
+            const instructor = courseCard.querySelector('.course-instructor span').textContent;
+
             document.getElementById('courseCode').value = code;
             document.getElementById('courseName').value = name;
             document.getElementById('courseCredits').value = credits;
             document.getElementById('courseType').value = type;
             document.getElementById('courseSchedule').value = schedule;
+            document.getElementById('courseInstructor').value = instructor === 'TBA' ? '' : instructor;
             document.getElementById('courseSelect').value = code;
         }
 
@@ -1151,21 +1100,21 @@
             const credits = document.getElementById('courseCredits').value;
             const type = document.getElementById('courseType').value;
             const schedule = document.getElementById('courseSchedule').value;
-            
+            const instructor = document.getElementById('courseInstructor').value;
+
             const courseCard = document.querySelector(`[data-course="${courseId}"]`);
             courseCard.querySelector('.course-code').textContent = code;
             courseCard.querySelector('.course-name').textContent = name;
             courseCard.querySelector('.course-tag').textContent = type.charAt(0).toUpperCase() + type.slice(1);
             courseCard.querySelector('.course-tag').className = `course-tag tag-${type}`;
             courseCard.querySelector('.course-schedule span').textContent = `${schedule} • ${credits} credits`;
+            courseCard.querySelector('.course-instructor span').textContent = instructor || 'TBA';
             courseCard.setAttribute('data-course', code.toLowerCase().replace(/\s+/g, ''));
-            
             const semesterId = courseCard.closest('.courses-container').id;
             updateStats(semesterId);
             closeModal();
         }
 
-        // Delete course
         function deleteCourse(courseId) {
             if (confirm('Are you sure you want to delete this course?')) {
                 const courseCard = document.querySelector(`[data-course="${courseId}"]`);
@@ -1175,7 +1124,6 @@
             }
         }
 
-        // Toggle course completion
         function toggleCourse(checkbox) {
             checkbox.classList.toggle('checked');
             const courseCard = checkbox.closest('.course-card');
@@ -1184,65 +1132,105 @@
             updateStats(semesterId);
         }
 
-        // Update stats
+        let draggedCourse = null;
+
+        function handleDragStart(e) {
+            draggedCourse = e.target.closest('.course-card');
+            e.dataTransfer.setData('text/plain', draggedCourse.dataset.course);
+            draggedCourse.classList.add('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.target.closest('.courses-container')?.classList.add('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const container = e.target.closest('.courses-container');
+            if (container && draggedCourse) {
+                container.insertBefore(draggedCourse, container.querySelector('.add-course-btn'));
+                container.classList.remove('drag-over');
+                draggedCourse.classList.remove('dragging');
+                draggedCourse = null;
+                updateStats(container.id);
+            }
+        }
+
         function updateStats(semesterId) {
-            const semesterContainer = document.getElementById(semesterId);
-            const courses = semesterContainer.querySelectorAll('.course-card');
-            let totalCredits = 0;
-            let physicsCoreCount = 0;
-            let mathMinorCount = 0;
-            let completedCredits = 0;
+            const container = document.getElementById(semesterId);
+            const courses = container.querySelectorAll('.course-card');
+            let totalCredits = 0, physicsCoreCount = 0, mathMinorCount = 0, completedCredits = 0;
 
             courses.forEach(course => {
                 const creditsText = course.querySelector('.course-schedule span').textContent;
                 const credits = parseInt(creditsText.split(' • ')[creditsText.split(' • ').length - 1]) || 0;
                 totalCredits += credits;
-                if (course.classList.contains('completed')) {
-                    completedCredits += credits;
-                }
+                if (course.classList.contains('completed')) completedCredits += credits;
                 const type = course.querySelector('.course-tag').textContent.toLowerCase();
                 if (type === 'core') physicsCoreCount++;
                 if (type === 'math') mathMinorCount++;
             });
 
             const courseCount = courses.length;
-            const statsElement = semesterContainer.previousElementSibling.querySelector('.semester-stats');
-            statsElement.textContent = `${courseCount} courses • ${totalCredits} credits`;
-
-            // Update sidebar stats
+            document.getElementById(`${semesterId}-stats`).textContent = `${courseCount} courses • ${totalCredits} credits`;
             document.getElementById('completedCredits').textContent = completedCredits;
             document.getElementById('remainingCredits').textContent = 128 - completedCredits;
             document.getElementById('physicsCore').textContent = `${physicsCoreCount}/11`;
             document.getElementById('mathMinor').textContent = `${mathMinorCount}/5`;
 
-            // Update overall progress
             const allCourses = document.querySelectorAll('.course-card').length;
             const completedCourses = document.querySelectorAll('.course-card.completed').length;
             const progress = allCourses > 0 ? Math.round((completedCourses / allCourses) * 100) : 0;
             document.getElementById('progressText').textContent = `${progress}%`;
             const progressCircle = document.getElementById('progressCircle');
             const circumference = 2 * Math.PI * 26;
-            const offset = circumference - (progress / 100) * circumference;
-            progressCircle.style.strokeDashoffset = offset;
+            progressCircle.style.strokeDashoffset = circumference - (progress / 100) * circumference;
 
-            // Update year progress
-            const yearColumn = semesterContainer.closest('.year-column');
+            const yearColumn = container.closest('.year-column');
             const yearCourses = yearColumn.querySelectorAll('.course-card');
             const yearCompleted = yearColumn.querySelectorAll('.course-card.completed').length;
-            const yearProgress = yearCourses.length > 0 ? Math.round((yearCompleted / yearCourses.length) * 100) : 0;
-            yearColumn.querySelector('.year-progress').textContent = `${yearProgress}%`;
+            yearColumn.querySelector('.year-progress').textContent = `${yearCourses.length > 0 ? Math.round((yearCompleted / yearCourses.length) * 100) : 0}%`;
         }
 
-        // Placeholder functions
+        function toggleYear(element) {
+            element.closest('.year-column').querySelectorAll('.semester-section').forEach(section => section.classList.toggle('collapsed'));
+        }
+
+        function toggleSemester(element) {
+            element.classList.toggle('collapsed');
+        }
+
+        function toggleSettings() {
+            document.getElementById('settingsPanel').classList.toggle('active');
+        }
+
+        function changeTheme() {
+            const theme = document.getElementById('themeSelect').value;
+            if (theme === 'dark') {
+                document.body.style.background = 'linear-gradient(135deg, #1e293b 0%, #334155 100%)';
+                document.querySelectorAll('.stats-card, .planner-container, .modal-content, .settings-panel').forEach(el => el.style.background = 'rgba(30, 41, 59, 0.95)');
+                document.querySelectorAll('.stat-item, .semester-header, .course-card').forEach(el => el.style.background = '#2d3b4f');
+                document.documentElement.style.setProperty('--text', '#f1f5f9');
+                document.documentElement.style.setProperty('--text-muted', '#94a3b8');
+                document.documentElement.style.setProperty('--surface', '#1e293b');
+                document.documentElement.style.setProperty('--surface-dark', '#2d3b4f');
+            } else {
+                document.body.style.background = 'linear-gradient(135deg, var(--primary) 0%, #005b9f 100%)';
+                document.querySelectorAll('.stats-card, .planner-container, .modal-content, .settings-panel').forEach(el => el.style.background = 'var(--glass-bg)');
+                document.querySelectorAll('.stat-item, .semester-header, .course-card').forEach(el => el.style.background = 'var(--surface)');
+                document.documentElement.style.setProperty('--text', '#0f172a');
+                document.documentElement.style.setProperty('--text-muted', '#64748b');
+                document.documentElement.style.setProperty('--surface', '#ffffff');
+                document.documentElement.style.setProperty('--surface-dark', '#f8fafc');
+            }
+        }
+
         function exportData() {
-            alert('Export feature coming soon!');
+            const format = document.getElementById('exportFormat').value;
+            alert(`Exporting as ${format}... (Feature coming soon!)`);
         }
 
-        function openSettings() {
-            alert('Settings feature coming soon!');
-        }
-
-        // Initialize stats
         updateStats('freshman-fall');
     </script>
 </body>
