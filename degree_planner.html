@@ -569,6 +569,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+ustria;
         }
 
         .modal-title {
@@ -737,7 +738,7 @@
                                             </div>
                                             <div class="course-info">
                                                 <div class="course-code">PHY 203</div>
-                                                <div class="course-name">Physics I for Physicists</div>
+                                                <div class="course-name">Physics I for Physicists Vomiting</div>
                                                 <div class="course-meta">
                                                     <div class="course-tag tag-core">Core</div>
                                                 </div>
@@ -858,4 +859,293 @@
                                     <div class="semester-stats">0 courses • 0 credits</div>
                                 </div>
                                 <div class="courses-container" id="junior-fall">
-                                    <div class="add-course-btn" onclick="addCourse('junior-
+                                    <div class="add-course-btn" onclick="addCourse('junior-fall')">
+                                        <i class="fas fa-plus"></i>
+                                        <span>Add Course</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="semester-section">
+                                <div class="semester-header">
+                                    <div class="semester-title">
+                                        <div class="semester-icon spring-icon">🌸</div>
+                                        Spring 2027
+                                    </div>
+                                    <div class="semester-stats">0 courses • 0 credits</div>
+                                </div>
+                                <div class="courses-container" id="junior-spring">
+                                    <div class="add-course-btn" onclick="addCourse('junior-spring')">
+                                        <i class="fas fa-plus"></i>
+                                        <span>Add Course</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Senior Year -->
+                        <div class="year-column">
+                            <div class="year-header">
+                                <div class="year-progress">0%</div>
+                                <div class="year-title">Senior</div>
+                                <div class="year-subtitle">2027-2028</div>
+                            </div>
+                            
+                            <div class="semester-section">
+                                <div class="semester-header">
+                                    <div class="semester-title">
+                                        <div class="semester-icon fall-icon">🍂</div>
+                                        Fall 2027
+                                    </div>
+                                    <div class="semester-stats">0 courses • 0 credits</div>
+                                </div>
+                                <div class="courses-container" id="senior-fall">
+                                    <div class="add-course-btn" onclick="addCourse('senior-fall')">
+                                        <i class="fas fa-plus"></i>
+                                        <span>Add Course</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="semester-section">
+                                <div class="semester-header">
+                                    <div class="semester-title">
+                                        <div class="semester-icon spring-icon">🌸</div>
+                                        Spring 2028
+                                    </div>
+                                    <div class="semester-stats">0 courses • 0 credits</div>
+                                </div>
+                                <div class="courses-container" id="senior-spring">
+                                    <div class="add-course-btn" onclick="addCourse('senior-spring')">
+                                        <i class="fas fa-plus"></i>
+                                        <span>Add Course</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Course Modal -->
+    <div class="modal" id="courseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Add Course</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="courseForm">
+                    <div class="form-group">
+                        <label class="form-label" for="courseCode">Course Code</label>
+                        <input type="text" id="courseCode" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="courseName">Course Name</label>
+                        <input type="text" id="courseName" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="courseCredits">Credits</label>
+                        <input type="number" id="courseCredits" class="form-input" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="courseType">Type</label>
+                        <select id="courseType" class="form-select">
+                            <option value="core">Core</option>
+                            <option value="math">Math</option>
+                            <option value="option">Option</option>
+                            <option value="stem">STEM</option>
+                            <option value="core-req">Core Requirement</option>
+                            <option value="capstone">Capstone</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="courseSchedule">Schedule</label>
+                        <input type="text" id="courseSchedule" class="form-input" placeholder="e.g., Every Semester • Lab">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Course</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal functions
+        function openModal(mode = 'add', semesterId = '', courseId = '') {
+            const modal = document.getElementById('courseModal');
+            const title = document.getElementById('modalTitle');
+            const form = document.getElementById('courseForm');
+            
+            if (mode === 'add') {
+                title.textContent = 'Add Course';
+                form.onsubmit = function(e) {
+                    e.preventDefault();
+                    addCourseSubmit(semesterId);
+                };
+            } else if (mode === 'edit') {
+                title.textContent = 'Edit Course';
+                loadCourseData(courseId);
+                form.onsubmit = function(e) {
+                    e.preventDefault();
+                    editCourseSubmit(courseId);
+                };
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('courseModal');
+            modal.classList.remove('active');
+            document.getElementById('courseForm').reset();
+        }
+
+        // Add course
+        function addCourse(semesterId) {
+            openModal('add', semesterId);
+        }
+
+        function addCourseSubmit(semesterId) {
+            const code = document.getElementById('courseCode').value;
+            const name = document.getElementById('courseName').value;
+            const credits = document.getElementById('courseCredits').value;
+            const type = document.getElementById('courseType').value;
+            const schedule = document.getElementById('courseSchedule').value;
+            
+            const courseId = 'course-' + Date.now();
+            
+            const courseHTML = `
+                <div class="course-card" data-course="${courseId}">
+                    <div class="course-actions">
+                        <button class="action-btn" onclick="editCourse('${courseId}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn" onclick="deleteCourse('${courseId}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="course-header">
+                        <div class="course-checkbox" onclick="toggleCourse(this)">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="course-info">
+                            <div class="course-code">${code}</div>
+                            <div class="course-name">${name}</div>
+                            <div class="course-meta">
+                                <div class="course-tag tag-${type}">${type.charAt(0).toUpperCase() + type.slice(1)}</div>
+                            </div>
+                            <div class="course-schedule">
+                                <i class="fas fa-clock"></i>
+                                <span>${schedule} • ${credits} credits</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const semesterContainer = document.getElementById(semesterId);
+            semesterContainer.insertAdjacentHTML('beforeend', courseHTML);
+            
+            updateStats(semesterId);
+            closeModal();
+        }
+
+        // Edit course
+        function editCourse(courseId) {
+            openModal('edit', '', courseId);
+        }
+
+        function loadCourseData(courseId) {
+            const courseCard = document.querySelector(`[data-course="${courseId}"]`);
+            const code = courseCard.querySelector('.course-code').textContent;
+            const name = courseCard.querySelector('.course-name').textContent;
+            const scheduleText = courseCard.querySelector('.course-schedule span').textContent;
+            const credits = scheduleText.split(' • ')[1].split(' ')[0];
+            const type = courseCard.querySelector('.course-tag').textContent.toLowerCase();
+            
+            document.getElementById('courseCode').value = code;
+            document.getElementById('courseName').value = name;
+            document.getElementById('courseCredits').value = credits;
+            document.getElementById('courseType').value = type;
+            document.getElementById('courseSchedule').value = scheduleText.split(' • ')[0];
+        }
+
+        function editCourseSubmit(courseId) {
+            const code = document.getElementById('courseCode').value;
+            const name = document.getElementById('courseName').value;
+            const credits = document.getElementById('courseCredits').value;
+            const type = document.getElementById('courseType').value;
+            const schedule = document.getElementById('courseSchedule').value;
+            
+            const courseCard = document.querySelector(`[data-course="${courseId}"]`);
+            courseCard.querySelector('.course-code').textContent = code;
+            courseCard.querySelector('.course-name').textContent = name;
+            courseCard.querySelector('.course-tag').textContent = type.charAt(0).toUpperCase() + type.slice(1);
+            courseCard.querySelector('.course-tag').className = `course-tag tag-${type}`;
+            courseCard.querySelector('.course-schedule span').textContent = `${schedule} • ${credits} credits`;
+            
+            const semesterId = courseCard.closest('.courses-container').id;
+            updateStats(semesterId);
+            closeModal();
+        }
+
+        // Delete course
+        function deleteCourse(courseId) {
+            if (confirm('Are you sure you want to delete this course?')) {
+                const courseCard = document.querySelector(`[data-course="${courseId}"]`);
+                const semesterId = courseCard.closest('.courses-container').id;
+                courseCard.remove();
+                updateStats(semesterId);
+            }
+        }
+
+        // Toggle course completion
+        function toggleCourse(checkbox) {
+            checkbox.classList.toggle('checked');
+            const courseCard = checkbox.closest('.course-card');
+            courseCard.classList.toggle('completed');
+            const semesterId = courseCard.closest('.courses-container').id;
+            updateStats(semesterId);
+        }
+
+        // Update stats
+        function updateStats(semesterId) {
+            const semesterContainer = document.getElementById(semesterId);
+            const courses = semesterContainer.querySelectorAll('.course-card');
+            let totalCredits = 0;
+            courses.forEach(course => {
+                const creditsText = course.querySelector('.course-schedule span').textContent;
+                const credits = parseInt(creditsText.split(' • ')[1]) || 0;
+                totalCredits += credits;
+            });
+            const courseCount = courses.length;
+            const statsElement = semesterContainer.previousElementSibling.querySelector('.semester-stats');
+            statsElement.textContent = `${courseCount} courses • ${totalCredits} credits`;
+
+            // Update overall progress (simplified)
+            const allCourses = document.querySelectorAll('.course-card').length;
+            const completedCourses = document.querySelectorAll('.course-card.completed').length;
+            const progress = allCourses > 0 ? Math.round((completedCourses / allCourses) * 100) : 0;
+            document.getElementById('progressText').textContent = `${progress}%`;
+            const progressCircle = document.getElementById('progressCircle');
+            const circumference = 2 * Math.PI * 26;
+            const offset = circumference - (progress / 100) * circumference;
+            progressCircle.style.strokeDashoffset = offset;
+        }
+
+        // Placeholder functions (to be implemented later)
+        function exportData() {
+            alert('Export feature coming soon!');
+        }
+
+        function openSettings() {
+            alert('Settings feature coming soon!');
+        }
+
+        // Initial stats update
+        updateStats('freshman-fall');
+    </script>
+</body>
+</html>
