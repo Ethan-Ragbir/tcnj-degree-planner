@@ -6,6 +6,8 @@
     <title>TCNJ Physics + Math - Degree Planner</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
+    <script src="https://apis.google.com/js/api.js"></script> <!-- Google API Client Library -->
     <style>
         :root {
             --primary: #003A74;
@@ -616,6 +618,11 @@
             transform: translateY(-1px);
         }
 
+        .schedule-group {
+            display: flex;
+            gap: 1rem;
+        }
+
         .settings-panel {
             position: fixed;
             top: 80px;
@@ -659,6 +666,39 @@
             justify-content: space-between;
             align-items: center;
         }
+
+        .calendar-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-large);
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 1600px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .calendar-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        #calendar { margin-top: 1rem; }
+
+        .fc-daygrid-day-number { font-size: 0.9rem; font-weight: 500; }
+        .fc-daygrid-day { transition: background 0.3s ease; }
+        .fc-daygrid-day:hover { background: rgba(253, 187, 48, 0.1); }
+        .fc-event { border-radius: 4px; padding: 2px 4px; font-size: 0.8rem; }
+        .fc-event-time { display: none; }
+        .fc-daygrid-event-dot { border: none; }
 
         @media (max-width: 1400px) {
             .years-grid { grid-template-columns: repeat(2, 1fr); }
@@ -733,6 +773,11 @@
                             <span class="stat-label">Math Minor</span>
                             <span class="stat-value" id="mathMinor">2/5</span>
                         </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Major</span>
+                            <span class="stat-value" id="currentMajor">Not Set</span>
+                        </div>
+                        <button class="btn btn-secondary" style="width: 100%; margin-top: 1rem;" onclick="addMajor()">Save Major</button>
                     </div>
                 </div>
 
@@ -769,7 +814,7 @@
                                                 <div class="course-code">PHY 203</div>
                                                 <div class="course-name">Physics I for Physicists</div>
                                                 <div class="course-meta"><div class="course-tag tag-core">Core</div></div>
-                                                <div class="course-schedule"><i class="fas fa-clock"></i><span>Every Semester • Lab • 4 credits</span></div>
+                                                <div class="course-schedule"><i class="fas fa-clock"></i><span>MWF 9:00-10:00 • 4 credits</span></div>
                                                 <div class="course-instructor"><i class="fas fa-chalkboard-teacher"></i><span>Dr. Smith</span></div>
                                             </div>
                                         </div>
@@ -785,7 +830,7 @@
                                                 <div class="course-code">MAT 127</div>
                                                 <div class="course-name">Calculus A</div>
                                                 <div class="course-meta"><div class="course-tag tag-math">Math</div></div>
-                                                <div class="course-schedule"><i class="fas fa-clock"></i><span>Every Semester • 4 credits</span></div>
+                                                <div class="course-schedule"><i class="fas fa-clock"></i><span>TTh 10:00-11:30 • 4 credits</span></div>
                                                 <div class="course-instructor"><i class="fas fa-chalkboard-teacher"></i><span>Prof. Johnson</span></div>
                                             </div>
                                         </div>
@@ -905,6 +950,25 @@
         </div>
     </main>
 
+    <footer>
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <h3 class="calendar-title">📅 Semester Calendar</h3>
+                <select id="semesterSelect" class="form-select" onchange="updateCalendar()">
+                    <option value="freshman-fall">Fall 2024</option>
+                    <option value="freshman-spring">Spring 2025</option>
+                    <option value="sophomore-fall">Fall 2025</option>
+                    <option value="sophomore-spring">Spring 2026</option>
+                    <option value="junior-fall">Fall 2026</option>
+                    <option value="junior-spring">Spring 2027</option>
+                    <option value="senior-fall">Fall 2027</option>
+                    <option value="senior-spring">Spring 2028</option>
+                </select>
+            </div>
+            <div id="calendar"></div>
+        </div>
+    </footer>
+
     <div class="modal" id="courseModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -942,14 +1006,42 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="courseSchedule">Schedule</label>
-                        <input type="text" id="courseSchedule" class="form-input" placeholder="e.g., Every Semester • Lab">
+                        <label class="form-label">Schedule</label>
+                        <div class="schedule-group">
+                            <select id="courseDays" class="form-select" multiple required>
+                                <option value="M">Monday</option>
+                                <option value="T">Tuesday</option>
+                                <option value="W">Wednesday</option>
+                                <option value="R">Thursday</option>
+                                <option value="F">Friday</option>
+                            </select>
+                            <input type="time" id="courseStartTime" class="form-input" required>
+                            <input type="time" id="courseEndTime" class="form-input" required>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="courseInstructor">Instructor</label>
                         <input type="text" id="courseInstructor" class="form-input" placeholder="e.g., Dr. Smith">
                     </div>
                     <button type="submit" class="btn btn-primary">Save Course</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="majorModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Save Major</h2>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="majorForm">
+                    <div class="form-group">
+                        <label class="form-label" for="majorName">Major Name</label>
+                        <input type="text" id="majorName" class="form-input" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Major</button>
                 </form>
             </div>
         </div>
@@ -973,42 +1065,74 @@
                 <select id="exportFormat" class="form-select">
                     <option value="pdf">PDF</option>
                     <option value="csv">CSV</option>
+                    <option value="calendar">Google Calendar</option>
                 </select>
             </div>
+            <button class="btn btn-secondary" style="width: 100%; margin-top: 1rem;" onclick="syncWithGoogleCalendar()">Sync with Google Calendar</button>
         </div>
     </div>
 
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
     <script>
+        const semesterCourses = {
+            'freshman-fall': [
+                { code: 'PHY 203', name: 'Physics I for Physicists', days: ['M', 'W', 'F'], startTime: '09:00', endTime: '10:00', credits: 4, type: 'core', instructor: 'Dr. Smith' },
+                { code: 'MAT 127', name: 'Calculus A', days: ['T', 'R'], startTime: '10:00', endTime: '11:30', credits: 4, type: 'math', instructor: 'Prof. Johnson' }
+            ],
+            'freshman-spring': [],
+            'sophomore-fall': [],
+            'sophomore-spring': [],
+            'junior-fall': [],
+            'junior-spring': [],
+            'senior-fall': [],
+            'senior-spring': []
+        };
+
         const availableCourses = [
-            { code: "PHY 203", name: "Physics I for Physicists", credits: 4, type: "core", schedule: "Every Semester • Lab" },
-            { code: "MAT 127", name: "Calculus A", credits: 4, type: "math", schedule: "Every Semester" },
-            { code: "PHY 204", name: "Physics II for Physicists", credits: 4, type: "core", schedule: "Every Semester • Lab" }
+            ...semesterCourses['freshman-fall'],
+            { code: 'PHY 204', name: 'Physics II for Physicists', days: ['M', 'W', 'F'], startTime: '10:30', endTime: '11:30', credits: 4, type: 'core', instructor: 'Dr. Brown' },
+            { code: 'MAT 128', name: 'Calculus B', days: ['T', 'R'], startTime: '13:00', endTime: '14:30', credits: 4, type: 'math', instructor: 'Prof. Davis' }
         ];
 
-        function openModal(mode = 'add', semesterId = '', courseId = '') {
-            const modal = document.getElementById('courseModal');
+        let currentMajor = localStorage.getMajor ? localStorage.getMajor : 'Not Set';
+
+        function openModal(mode = 'add', semesterId = '', courseId = '', major = false) {
+            const modal = document.getElementById(major ? 'majorModal' : 'courseModal');
             const title = document.getElementById('modalTitle');
-            const form = document.getElementById('courseForm');
+            const form = document.getElementById(major ? 'majorForm' : 'courseForm');
             const courseSelect = document.getElementById('courseSelect');
 
-            courseSelect.innerHTML = '<option value="">-- Select a course --</option>';
-            availableCourses.forEach(course => {
-                const option = document.createElement('option');
-                option.value = course.code;
-                option.textContent = `${course.code} - ${course.name}`;
-                courseSelect.appendChild(option);
-            });
+            if (!major) {
+                courseSelect.innerHTML = '<option value="">-- Select a course --</option>';
+                availableCourses.forEach(course => {
+                    const option = document.createElement('option');
+                    option.value = course.code;
+                    option.textContent = `${course.code} - ${course.name}`;
+                    courseSelect.appendChild(option);
+                });
 
-            if (mode === 'add') {
-                title.textContent = 'Add Course';
-                form.onsubmit = (e) => { e.preventDefault(); addCourseSubmit(semesterId); };
-                resetForm();
-            } else if (mode === 'edit') {
-                title.textContent = 'Edit Course';
-                loadCourseData(courseId);
-                form.onsubmit = (e) => { e.preventDefault(); editCourseSubmit(courseId); };
+                if (mode === 'add') {
+                    title.textContent = 'Add Course';
+                    resetForm();
+                } else if (mode === 'edit') {
+                    title.textContent = 'Edit Course';
+                    loadCourseData(courseId);
+                }
+            } else {
+                title.textContent = 'Save Major';
+                document.getElementById('majorName').value = currentMajor === 'Not Set' ? '' : currentMajor;
             }
             modal.classList.add('active');
+
+            const submitHandler = (e) => {
+                e.preventDefault();
+                console.log('Form submitted for mode:', mode, 'semesterId:', semesterId, 'courseId:', courseId, 'major:', major);
+                if (major) addMajorSubmit();
+                else if (mode === 'add') addCourseSubmit(semesterId);
+                else editCourseSubmit(courseId);
+            };
+            form.removeEventListener('submit', submitHandler);
+            form.addEventListener('submit', submitHandler);
         }
 
         function resetForm() {
@@ -1016,7 +1140,9 @@
             document.getElementById('courseName').value = '';
             document.getElementById('courseCredits').value = '';
             document.getElementById('courseType').value = '';
-            document.getElementById('courseSchedule').value = '';
+            document.getElementById('courseDays').selectedIndex = -1;
+            document.getElementById('courseStartTime').value = '';
+            document.getElementById('courseEndTime').value = '';
             document.getElementById('courseInstructor').value = '';
             document.getElementById('courseSelect').value = '';
         }
@@ -1029,27 +1155,49 @@
                 document.getElementById('courseName').value = selectedCourse.name;
                 document.getElementById('courseCredits').value = selectedCourse.credits;
                 document.getElementById('courseType').value = selectedCourse.type;
-                document.getElementById('courseSchedule').value = selectedCourse.schedule;
-                document.getElementById('courseInstructor').value = '';
+                document.getElementById('courseDays').value = selectedCourse.days;
+                document.getElementById('courseStartTime').value = selectedCourse.startTime;
+                document.getElementById('courseEndTime').value = selectedCourse.endTime;
+                document.getElementById('courseInstructor').value = selectedCourse.instructor || '';
             } else resetForm();
         });
 
         function closeModal() {
-            document.getElementById('courseModal').classList.remove('active');
+            document.querySelectorAll('.modal').forEach(modal => modal.classList.remove('active'));
             resetForm();
         }
 
-        function addCourse(semesterId) { openModal('add', semesterId); }
+        function addCourse(semesterId) {
+            console.log('Opening modal for semester:', semesterId);
+            openModal('add', semesterId);
+        }
 
         function addCourseSubmit(semesterId) {
-            const code = document.getElementById('courseCode').value;
-            const name = document.getElementById('courseName').value;
-            const credits = document.getElementById('courseCredits').value;
-            const type = document.getElementById('courseType').value;
-            const schedule = document.getElementById('courseSchedule').value;
-            const instructor = document.getElementById('courseInstructor').value;
+            console.log('Processing addCourseSubmit for semester:', semesterId);
+            const code = document.getElementById('courseCode').value.trim();
+            const name = document.getElementById('courseName').value.trim();
+            const credits = document.getElementById('courseCredits').value.trim();
+            const type = document.getElementById('courseType').value.trim();
+            const days = Array.from(document.getElementById('courseDays').selectedOptions).map(opt => opt.value);
+            const startTime = document.getElementById('courseStartTime').value;
+            const endTime = document.getElementById('courseEndTime').value;
+            const instructor = document.getElementById('courseInstructor').value.trim();
+
+            if (!code || !name || !credits || !type || days.length === 0 || !startTime || !endTime) {
+                console.log('Validation failed:', { code, name, credits, type, days, startTime, endTime });
+                alert('Please fill in all required fields, including at least one day and valid times.');
+                return;
+            }
 
             const courseId = code.toLowerCase().replace(/\s+/g, '');
+            const container = document.getElementById(semesterId);
+            if (!container) {
+                console.error('Container not found for semesterId:', semesterId);
+                alert('Invalid semester selected.');
+                return;
+            }
+
+            const scheduleText = `${days.join('')} ${startTime}-${endTime}`;
             const courseHTML = `
                 <div class="course-card" data-course="${courseId}" draggable="true" ondragstart="handleDragStart(event)">
                     <div class="course-actions">
@@ -1062,14 +1210,22 @@
                             <div class="course-code">${code}</div>
                             <div class="course-name">${name}</div>
                             <div class="course-meta"><div class="course-tag tag-${type}">${type.charAt(0).toUpperCase() + type.slice(1)}</div></div>
-                            <div class="course-schedule"><i class="fas fa-clock"></i><span>${schedule} • ${credits} credits</span></div>
+                            <div class="course-schedule"><i class="fas fa-clock"></i><span>${scheduleText} • ${credits} credits</span></div>
                             <div class="course-instructor"><i class="fas fa-chalkboard-teacher"></i><span>${instructor || 'TBA'}</span></div>
                         </div>
                     </div>
                 </div>
             `;
-            document.getElementById(semesterId).insertAdjacentHTML('beforeend', courseHTML);
+            container.insertAdjacentHTML('beforeend', courseHTML);
+            console.log('Course added to DOM:', courseId);
             updateStats(semesterId);
+            updateCalendar();
+            syncToGoogleCalendar([{
+                summary: `${code} - ${name}`,
+                start: { dateTime: new Date(2025, 0, 1, startTime.split(':')[0], startTime.split(':')[1]).toISOString() },
+                end: { dateTime: new Date(2025, 0, 1, endTime.split(':')[0], endTime.split(':')[1]).toISOString() },
+                recurrence: ['RRULE:FREQ=WEEKLY;UNTIL=20251231T235959Z']
+            }]);
             closeModal();
         }
 
@@ -1081,7 +1237,9 @@
             const name = courseCard.querySelector('.course-name').textContent;
             const scheduleText = courseCard.querySelector('.course-schedule span').textContent;
             const credits = parseInt(scheduleText.split(' • ')[scheduleText.split(' • ').length - 1]);
-            const schedule = scheduleText.split(' • ').slice(0, -1).join(' • ');
+            const [daysPart, timePart] = scheduleText.split(' • ')[0].split(' ');
+            const [startTime, endTime] = timePart.split('-');
+            const days = daysPart.split('');
             const type = courseCard.querySelector('.course-tag').textContent.toLowerCase();
             const instructor = courseCard.querySelector('.course-instructor span').textContent;
 
@@ -1089,7 +1247,9 @@
             document.getElementById('courseName').value = name;
             document.getElementById('courseCredits').value = credits;
             document.getElementById('courseType').value = type;
-            document.getElementById('courseSchedule').value = schedule;
+            document.getElementById('courseDays').value = days;
+            document.getElementById('courseStartTime').value = startTime;
+            document.getElementById('courseEndTime').value = endTime;
             document.getElementById('courseInstructor').value = instructor === 'TBA' ? '' : instructor;
             document.getElementById('courseSelect').value = code;
         }
@@ -1099,19 +1259,29 @@
             const name = document.getElementById('courseName').value;
             const credits = document.getElementById('courseCredits').value;
             const type = document.getElementById('courseType').value;
-            const schedule = document.getElementById('courseSchedule').value;
+            const days = Array.from(document.getElementById('courseDays').selectedOptions).map(opt => opt.value).join('');
+            const startTime = document.getElementById('courseStartTime').value;
+            const endTime = document.getElementById('courseEndTime').value;
             const instructor = document.getElementById('courseInstructor').value;
 
             const courseCard = document.querySelector(`[data-course="${courseId}"]`);
+            const scheduleText = `${days} ${startTime}-${endTime}`;
             courseCard.querySelector('.course-code').textContent = code;
             courseCard.querySelector('.course-name').textContent = name;
             courseCard.querySelector('.course-tag').textContent = type.charAt(0).toUpperCase() + type.slice(1);
             courseCard.querySelector('.course-tag').className = `course-tag tag-${type}`;
-            courseCard.querySelector('.course-schedule span').textContent = `${schedule} • ${credits} credits`;
+            courseCard.querySelector('.course-schedule span').textContent = `${scheduleText} • ${credits} credits`;
             courseCard.querySelector('.course-instructor span').textContent = instructor || 'TBA';
             courseCard.setAttribute('data-course', code.toLowerCase().replace(/\s+/g, ''));
             const semesterId = courseCard.closest('.courses-container').id;
             updateStats(semesterId);
+            updateCalendar();
+            syncToGoogleCalendar([{
+                summary: `${code} - ${name}`,
+                start: { dateTime: new Date(2025, 0, 1, startTime.split(':')[0], startTime.split(':')[1]).toISOString() },
+                end: { dateTime: new Date(2025, 0, 1, endTime.split(':')[0], endTime.split(':')[1]).toISOString() },
+                recurrence: ['RRULE:FREQ=WEEKLY;UNTIL=20251231T235959Z']
+            }]);
             closeModal();
         }
 
@@ -1121,6 +1291,9 @@
                 const semesterId = courseCard.closest('.courses-container').id;
                 courseCard.remove();
                 updateStats(semesterId);
+                updateCalendar();
+                // Remove from Google Calendar (placeholder)
+                console.log('Remove event from Google Calendar:', courseId);
             }
         }
 
@@ -1130,6 +1303,7 @@
             courseCard.classList.toggle('completed');
             const semesterId = courseCard.closest('.courses-container').id;
             updateStats(semesterId);
+            updateCalendar();
         }
 
         let draggedCourse = null;
@@ -1154,6 +1328,7 @@
                 draggedCourse.classList.remove('dragging');
                 draggedCourse = null;
                 updateStats(container.id);
+                updateCalendar();
             }
         }
 
@@ -1209,29 +1384,221 @@
             const theme = document.getElementById('themeSelect').value;
             if (theme === 'dark') {
                 document.body.style.background = 'linear-gradient(135deg, #1e293b 0%, #334155 100%)';
-                document.querySelectorAll('.stats-card, .planner-container, .modal-content, .settings-panel').forEach(el => el.style.background = 'rgba(30, 41, 59, 0.95)');
-                document.querySelectorAll('.stat-item, .semester-header, .course-card').forEach(el => el.style.background = '#2d3b4f');
+                document.querySelectorAll('.stats-card, .planner-container, .modal-content, .settings-panel, .calendar-container').forEach(el => el.style.background = 'rgba(30, 41, 59, 0.95)');
+                document.querySelectorAll('.stat-item, .semester-header, .course-card, .fc-daygrid-day').forEach(el => el.style.background = '#2d3b4f');
                 document.documentElement.style.setProperty('--text', '#f1f5f9');
                 document.documentElement.style.setProperty('--text-muted', '#94a3b8');
                 document.documentElement.style.setProperty('--surface', '#1e293b');
                 document.documentElement.style.setProperty('--surface-dark', '#2d3b4f');
             } else {
                 document.body.style.background = 'linear-gradient(135deg, var(--primary) 0%, #005b9f 100%)';
-                document.querySelectorAll('.stats-card, .planner-container, .modal-content, .settings-panel').forEach(el => el.style.background = 'var(--glass-bg)');
-                document.querySelectorAll('.stat-item, .semester-header, .course-card').forEach(el => el.style.background = 'var(--surface)');
+                document.querySelectorAll('.stats-card, .planner-container, .modal-content, .settings-panel, .calendar-container').forEach(el => el.style.background = 'var(--glass-bg)');
+                document.querySelectorAll('.stat-item, .semester-header, .course-card, .fc-daygrid-day').forEach(el => el.style.background = 'var(--surface)');
                 document.documentElement.style.setProperty('--text', '#0f172a');
                 document.documentElement.style.setProperty('--text-muted', '#64748b');
                 document.documentElement.style.setProperty('--surface', '#ffffff');
                 document.documentElement.style.setProperty('--surface-dark', '#f8fafc');
             }
+            updateCalendar();
         }
 
         function exportData() {
             const format = document.getElementById('exportFormat').value;
-            alert(`Exporting as ${format}... (Feature coming soon!)`);
+            if (format === 'pdf') {
+                alert('Exporting as PDF... (Feature coming soon!)');
+            } else if (format === 'csv') {
+                alert('Exporting as CSV... (Feature coming soon!)');
+            } else if (format === 'calendar') {
+                syncWithGoogleCalendar();
+            }
         }
 
-        updateStats('freshman-fall');
+        function getDayOfWeekIndex(dayChar) {
+            const days = { M: 1, T: 2, W: 3, R: 4, F: 5 };
+            return days[dayChar] || 0;
+        }
+
+        function generateCalendarEvents(semesterId) {
+            console.log('Generating events for semester:', semesterId);
+            const [yearPart, seasonPart] = semesterId.split('-');
+            const year = yearPart === 'freshman' ? 2024 : yearPart === 'sophomore' ? 2025 : yearPart === 'junior' ? 2026 : 2027;
+            const startMonth = seasonPart === 'fall' ? 8 : 1;
+            const startDate = new Date(year, startMonth - 1, 1);
+            const endDate = new Date(year, startMonth + (seasonPart === 'fall' ? 3 : 4), 0);
+            const events = [];
+            const container = document.getElementById(semesterId);
+
+            if (container) {
+                console.log('Container found:', container.id);
+                const courses = container.querySelectorAll('.course-card');
+                courses.forEach(course => {
+                    const code = course.querySelector('.course-code').textContent;
+                    const name = course.querySelector('.course-name').textContent;
+                    const scheduleText = course.querySelector('.course-schedule span').textContent;
+                    const [daysPart, timePart] = scheduleText.split(' • ')[0].split(' ');
+                    const days = daysPart.split('');
+                    const [startTime, endTime] = timePart.split('-');
+                    const type = course.querySelector('.course-tag').textContent.toLowerCase();
+
+                    let currentDate = new Date(startDate);
+                    while (currentDate <= endDate) {
+                        const dayShort = currentDate.toLocaleString('en-US', { weekday: 'short' }).charAt(0).toUpperCase();
+                        if (days.includes(dayShort)) {
+                            events.push({
+                                title: `${code} - ${name} (${startTime}-${endTime})`,
+                                start: currentDate.toISOString().split('T')[0] + 'T' + startTime + ':00',
+                                end: currentDate.toISOString().split('T')[0] + 'T' + endTime + ':00',
+                                allDay: false,
+                                className: `event-${type}`
+                            });
+                        }
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                });
+            } else {
+                console.error('Container not found for semesterId:', semesterId);
+            }
+
+            return events;
+        }
+
+        function updateCalendar() {
+            const semesterId = document.getElementById('semesterSelect').value;
+            const calendarEl = document.getElementById('calendar');
+            const events = generateCalendarEvents(semesterId);
+
+            if (window.calendar && typeof window.calendar.destroy === 'function') {
+                window.calendar.destroy();
+            }
+
+            window.calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridWeek',
+                events: events,
+                height: 'auto',
+                eventContent: function(arg) {
+                    return { html: `<div style="white-space: normal;">${arg.event.title}</div>` };
+                },
+                eventDidMount: function(info) {
+                    const type = info.event.classNames[0].replace('event-', '');
+                    info.el.style.backgroundColor = getEventColor(type);
+                    info.el.style.borderColor = getEventColor(type);
+                },
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                }
+            });
+
+            window.calendar.render();
+        }
+
+        function getEventColor(type) {
+            const colors = {
+                core: '#bfdbfe',
+                math: '#fbcfe8',
+                'core-req': '#fde68a',
+                option: '#a7f3d0',
+                capstone: '#c7d2fe'
+            };
+            return colors[type] || '#d1d5db';
+        }
+
+        function addMajor() {
+            console.log('Opening major modal');
+            openModal('add', '', '', true);
+        }
+
+        function addMajorSubmit() {
+            console.log('Processing addMajorSubmit');
+            const majorName = document.getElementById('majorName').value.trim();
+            if (!majorName) {
+                console.log('Validation failed: Major name is empty');
+                alert('Please enter a major name.');
+                return;
+            }
+            currentMajor = majorName;
+            localStorage.setItem('major', majorName);
+            document.getElementById('currentMajor').textContent = majorName;
+            console.log('Major saved:', majorName);
+            closeModal();
+            updateStats('freshman-fall'); // Trigger stats update to reflect major change
+        }
+
+        function initGoogleCalendar() {
+            gapi.load('client:auth2', () => {
+                gapi.client.init({
+                    apiKey: 'YOUR_API_KEY', // Replace with your API key from Google Cloud Console
+                    clientId: '515503606305-jrcs5fprmkaqnqpja8u3c4g23hku892p.apps.googleusercontent.com', // Your provided client ID
+                    discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
+                    scope: 'https://www.googleapis.com/auth/calendar'
+                }).then(() => {
+                    console.log('Google Calendar API initialized');
+                    gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+                    updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+                }, (error) => {
+                    console.error('Error initializing Google Calendar API:', error);
+                });
+            });
+        }
+
+        function updateSigninStatus(isSignedIn) {
+            if (isSignedIn) {
+                console.log('User is signed in to Google Calendar');
+            } else {
+                gapi.auth2.getAuthInstance().signIn();
+            }
+        }
+
+        function syncToGoogleCalendar(events) {
+            if (!gapi.auth2.getAuthInstance().isSignedIn.get()) {
+                console.log('User not signed in, skipping sync');
+                return;
+            }
+            events.forEach(event => {
+                gapi.client.calendar.events.insert({
+                    calendarId: 'primary',
+                    resource: event
+                }).then(response => {
+                    console.log('Event created: ', response.result);
+                }, error => {
+                    console.error('Error creating event:', error);
+                });
+            });
+        }
+
+        function syncWithGoogleCalendar() {
+            console.log('Syncing with Google Calendar');
+            initGoogleCalendar();
+            const allEvents = [];
+            Object.keys(semesterCourses).forEach(semesterId => {
+                const container = document.getElementById(semesterId);
+                if (container) {
+                    const courses = container.querySelectorAll('.course-card');
+                    courses.forEach(course => {
+                        const code = course.querySelector('.course-code').textContent;
+                        const name = course.querySelector('.course-name').textContent;
+                        const scheduleText = course.querySelector('.course-schedule span').textContent;
+                        const [daysPart, timePart] = scheduleText.split(' • ')[0].split(' ');
+                        const [startTime, endTime] = timePart.split('-');
+                        allEvents.push({
+                            summary: `${code} - ${name}`,
+                            start: { dateTime: new Date(2025, 0, 1, startTime.split(':')[0], startTime.split(':')[1]).toISOString() },
+                            end: { dateTime: new Date(2025, 0, 1, endTime.split(':')[0], endTime.split(':')[1]).toISOString() },
+                            recurrence: ['RRULE:FREQ=WEEKLY;UNTIL=20251231T235959Z']
+                        });
+                    });
+                }
+            });
+            syncToGoogleCalendar(allEvents);
+        }
+
+        window.onload = () => {
+            updateStats('freshman-fall');
+            document.getElementById('semesterSelect').value = 'freshman-fall';
+            updateCalendar();
+            document.getElementById('currentMajor').textContent = currentMajor;
+        };
     </script>
 </body>
 </html>
