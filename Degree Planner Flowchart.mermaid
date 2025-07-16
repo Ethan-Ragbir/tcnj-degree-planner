@@ -1,0 +1,213 @@
+graph TD
+    %% Application Initialization
+    A[🚀 Application Start] --> B[📂 Load from localStorage]
+    B --> C{💾 Data exists?}
+    C -->|Yes| D[📊 Load Data]
+    C -->|No| E[🆕 Initialize Defaults]
+    D --> F[🎨 Render UI]
+    E --> F
+    F --> G[📈 Render Statistics]
+    G --> H[🗓️ Render Planner]
+    H --> I[📚 Render Courses]
+    I --> J[📅 Initialize Calendar]
+    J --> K[✨ Application Ready]
+    
+    %% User Interactions Hub
+    K --> L{🎯 User Actions}
+    
+    %% Course Management
+    L --> M[📚 Course Management]
+    M --> M1[➕ Add Course]
+    M --> M2[✏️ Edit Course]
+    M --> M3[🗑️ Delete Course]
+    M --> M4[✅ Toggle Complete]
+    M --> M5[🔄 Drag Drop]
+    
+    %% Add Course Flow
+    M1 --> M1A[👆 Click Add Button]
+    M1A --> M1B[📋 Open Modal]
+    M1B --> M1C[📝 Fill Details]
+    M1C --> M1D[🔍 Validate]
+    M1D --> M1E{✅ Valid?}
+    M1E -->|No| M1C
+    M1E -->|Yes| M1F[💾 Save Course]
+    M1F --> M1G[🎨 Render Card]
+    M1G --> M1H[📊 Update Stats]
+    M1H --> M1I[💾 Persist Data]
+    M1I --> M1J[📅 Update Calendar]
+    M1J --> M1K[☁️ Sync Google]
+    M1K --> M1L[❌ Close Modal]
+    
+    %% Edit Course Flow
+    M2 --> M2A[✏️ Click Edit]
+    M2A --> M2B[📂 Load Data]
+    M2B --> M2C[📋 Open Modal]
+    M2C --> M2D[✏️ Modify]
+    M2D --> M2E[🔍 Validate]
+    M2E --> M2F{✅ Valid?}
+    M2F -->|No| M2D
+    M2F -->|Yes| M2G[💾 Update Data]
+    M2G --> M2H[🎨 Update Display]
+    M2H --> M2I[📊 Update Stats]
+    M2I --> M2J[💾 Persist]
+    M2J --> M2K[📅 Update Calendar]
+    M2K --> M2L[❌ Close Modal]
+    
+    %% Delete Course Flow
+    M3 --> M3A[🗑️ Click Delete]
+    M3A --> M3B{⚠️ Confirm?}
+    M3B -->|No| K
+    M3B -->|Yes| M3C[💾 Remove Data]
+    M3C --> M3D[🎨 Remove Card]
+    M3D --> M3E[📊 Update Stats]
+    M3E --> M3F[💾 Persist]
+    M3F --> M3G[📅 Update Calendar]
+    
+    %% Toggle Complete Flow
+    M4 --> M4A[☑️ Click Checkbox]
+    M4A --> M4B[🔄 Toggle Status]
+    M4B --> M4C[🎨 Update Visual]
+    M4C --> M4D[📊 Update Stats]
+    M4D --> M4E[💾 Persist]
+    M4E --> M4F[📅 Update Calendar]
+    
+    %% Drag Drop Flow
+    M5 --> M5A[🖱️ Start Drag]
+    M5A --> M5B[📌 Set Target]
+    M5B --> M5C[👆 Drag Over]
+    M5C --> M5D[📍 Drop]
+    M5D --> M5E[➖ Remove Old]
+    M5E --> M5F[➕ Add New]
+    M5F --> M5G[📊 Update Stats]
+    M5G --> M5H[💾 Persist]
+    M5H --> M5I[📅 Update Calendar]
+    
+    %% Statistics and Progress
+    L --> N[📊 Statistics]
+    N --> N1[🔢 Total Credits]
+    N --> N2[✅ Completed Credits]
+    N --> N3[⚛️ Physics Core]
+    N --> N4[🔢 Math Minor]
+    N --> N5[🎯 Progress Ring]
+    N --> N6[📈 Year Progress]
+    N --> N7[📋 Semester Stats]
+    
+    %% Calendar Management
+    L --> O[📅 Calendar]
+    O --> O1[📋 Select Semester]
+    O1 --> O2[🎯 Generate Events]
+    O2 --> O3[🔍 Parse Schedules]
+    O3 --> O4[📅 Create Events]
+    O4 --> O5[🎨 Render Calendar]
+    O5 --> O6[🔄 Handle Views]
+    
+    %% Settings and Export
+    L --> P[⚙️ Settings]
+    P --> P1[🎛️ Toggle Panel]
+    P --> P2[🎨 Change Theme]
+    P --> P3[📤 Export Data]
+    P --> P4[☁️ Google Sync]
+    
+    %% Theme Management
+    P2 --> P2A[🎨 Select Theme]
+    P2A --> P2B{🌙 Dark Mode?}
+    P2B -->|Yes| P2C[🌙 Apply Dark]
+    P2B -->|No| P2D[☀️ Apply Light]
+    P2C --> P2E[📅 Update Calendar]
+    P2D --> P2E
+    
+    %% Export Management
+    P3 --> P3A[📋 Select Format]
+    P3A --> P3B{📄 Format?}
+    P3B -->|PDF| P3C[📄 Generate PDF]
+    P3B -->|CSV| P3D[📊 Generate CSV]
+    P3B -->|Calendar| P3E[☁️ Google Sync]
+    
+    %% Google Calendar Sync
+    P4 --> P4A[🔑 Initialize API]
+    P4A --> P4B[👤 Authenticate]
+    P4B --> P4C[📅 Generate Events]
+    P4C --> P4D[☁️ Create Events]
+    
+    %% Major Management
+    L --> Q[🎓 Major Management]
+    Q --> Q1[👆 Click Save Major]
+    Q1 --> Q2[📋 Open Modal]
+    Q2 --> Q3[✏️ Enter Name]
+    Q3 --> Q4[🔍 Validate]
+    Q4 --> Q5{✅ Valid?}
+    Q5 -->|No| Q3
+    Q5 -->|Yes| Q6[💾 Update Major]
+    Q6 --> Q7[🎨 Update Display]
+    Q7 --> Q8[💾 Persist]
+    Q8 --> Q9[❌ Close Modal]
+    
+    %% UI Interactions
+    L --> R[🎨 UI Controls]
+    R --> R1[📅 Toggle Years]
+    R --> R2[📋 Toggle Semesters]
+    R --> R3[📋 Modal Management]
+    R --> R4[✨ Hover Effects]
+    R --> R5[📱 Responsive Design]
+    
+    %% Data Persistence
+    M1I --> S[💾 Data Storage]
+    M2J --> S
+    M3F --> S
+    M4E --> S
+    M5H --> S
+    Q8 --> S
+    S --> S1[💾 Semester Courses]
+    S --> S2[💾 Available Courses]
+    S --> S3[💾 Current Major]
+    
+    %% Error Handling
+    M1D --> T{⚠️ Errors?}
+    M2E --> T
+    Q4 --> T
+    T -->|Yes| T1[🚨 Show Error]
+    T1 --> T2[🎯 Highlight Fields]
+    T2 --> T3[🛑 Prevent Submit]
+    
+    %% Calendar Engine
+    O2 --> U[⚙️ Event Engine]
+    U --> U1[📚 Get Courses]
+    U1 --> U2[🔍 Parse Schedule]
+    U2 --> U3[📅 Calculate Dates]
+    U3 --> U4[🔄 Generate Recurring]
+    U4 --> U5[🎨 Apply Styling]
+    
+    %% Styling
+    classDef initFlow fill:#003A74,stroke:#001845,stroke-width:3px,color:#ffffff
+    classDef readyState fill:#FDBB30,stroke:#e6a700,stroke-width:3px,color:#003A74
+    classDef courseFlow fill:#10b981,stroke:#059669,stroke-width:2px,color:#ffffff
+    classDef addFlow fill:#34d399,stroke:#10b981,stroke-width:2px,color:#ffffff
+    classDef editFlow fill:#f97316,stroke:#ea580c,stroke-width:2px,color:#ffffff
+    classDef deleteFlow fill:#ef4444,stroke:#dc2626,stroke-width:2px,color:#ffffff
+    classDef completeFlow fill:#8b5cf6,stroke:#7c3aed,stroke-width:2px,color:#ffffff
+    classDef dragFlow fill:#06b6d4,stroke:#0891b2,stroke-width:2px,color:#ffffff
+    classDef statsFlow fill:#FDBB30,stroke:#e6a700,stroke-width:2px,color:#92400e
+    classDef calendarFlow fill:#6366f1,stroke:#4f46e5,stroke-width:2px,color:#ffffff
+    classDef settingsFlow fill:#6b7280,stroke:#4b5563,stroke-width:2px,color:#ffffff
+    classDef majorFlow fill:#ec4899,stroke:#db2777,stroke-width:2px,color:#ffffff
+    classDef uiFlow fill:#14b8a6,stroke:#0d9488,stroke-width:2px,color:#ffffff
+    classDef dataFlow fill:#1e40af,stroke:#1e3a8a,stroke-width:2px,color:#ffffff
+    classDef errorFlow fill:#dc2626,stroke:#991b1b,stroke-width:2px,color:#ffffff
+    classDef engineFlow fill:#7c3aed,stroke:#6d28d9,stroke-width:2px,color:#ffffff
+    
+    class A,B,C,D,E,F,G,H,I,J initFlow
+    class K,L readyState
+    class M courseFlow
+    class M1,M1A,M1B,M1C,M1D,M1E,M1F,M1G,M1H,M1I,M1J,M1K,M1L addFlow
+    class M2,M2A,M2B,M2C,M2D,M2E,M2F,M2G,M2H,M2I,M2J,M2K,M2L editFlow
+    class M3,M3A,M3B,M3C,M3D,M3E,M3F,M3G deleteFlow
+    class M4,M4A,M4B,M4C,M4D,M4E,M4F completeFlow
+    class M5,M5A,M5B,M5C,M5D,M5E,M5F,M5G,M5H,M5I dragFlow
+    class N,N1,N2,N3,N4,N5,N6,N7 statsFlow
+    class O,O1,O2,O3,O4,O5,O6 calendarFlow
+    class P,P1,P2,P3,P4,P2A,P2B,P2C,P2D,P2E,P3A,P3B,P3C,P3D,P3E,P4A,P4B,P4C,P4D settingsFlow
+    class Q,Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9 majorFlow
+    class R,R1,R2,R3,R4,R5 uiFlow
+    class S,S1,S2,S3 dataFlow
+    class T,T1,T2,T3 errorFlow
+    class U,U1,U2,U3,U4,U5 engineFlow
