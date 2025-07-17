@@ -3,1614 +3,1099 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TCNJ Physics + Math - Degree Planner</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
-    <script src="https://apis.google.com/js/api.js"></script>
+    <title>TCNJ Physics Major - Interactive Course Planner</title>
     <style>
-        :root {
-            --primary: #003A74;
-            --accent: #FDBB30;
-            --success: #10b981;
-            --surface: #ffffff;
-            --surface-dark: #f8fafc;
-            --border: rgba(148, 163, 184, 0.15);
-            --text: #0f172a;
-            --text-muted: #64748b;
-            --glass-bg: rgba(255, 255, 255, 0.95);
-            --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            --shadow-large: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, var(--primary) 0%, #005b9f 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
             min-height: 100vh;
-            color: var(--text);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #e2e8f0;
+            overflow-x: auto;
         }
 
-        .navbar {
-            position: fixed;
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(15, 15, 35, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            padding: 1.5rem 2rem;
+            position: sticky;
             top: 0;
-            left: 0;
-            right: 0;
-            height: 80px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(25px);
-            border-bottom: 1px solid var(--border);
-            z-index: 1000;
-            transition: all 0.4s ease;
+            z-index: 100;
         }
 
-        .nav-container {
-            max-width: 1400px;
+        .header-content {
+            max-width: 1600px;
             margin: 0 auto;
-            padding: 0 2rem;
-            height: 100%;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-        }
-
-        .nav-brand {
-            display: flex;
             align-items: center;
+            flex-wrap: wrap;
             gap: 1rem;
         }
 
-        .nav-logo {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            border-radius: 16px;
+        .header-title {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.2rem;
+            flex-direction: column;
+        }
+
+        .header-title h1 {
+            font-size: 1.75rem;
             font-weight: 700;
-            box-shadow: 0 8px 25px rgba(0, 58, 116, 0.3);
-            transition: transform 0.3s ease;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .nav-logo:hover { transform: rotate(5deg) scale(1.1); }
-
-        .nav-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text);
+        .header-title p {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            font-weight: 400;
         }
 
-        .nav-subtitle {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .nav-actions {
+        .header-controls {
             display: flex;
-            align-items: center;
             gap: 1rem;
-        }
-
-        .progress-ring {
-            position: relative;
-            width: 60px;
-            height: 60px;
-        }
-
-        .progress-ring svg {
-            width: 100%;
-            height: 100%;
-            transform: rotate(-90deg);
-        }
-
-        .progress-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--accent);
+            align-items: center;
         }
 
         .btn {
             padding: 0.75rem 1.5rem;
             border: none;
-            border-radius: 16px;
-            font-weight: 600;
-            font-size: 0.9rem;
+            border-radius: 0.75rem;
+            font-weight: 500;
+            font-size: 0.875rem;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            display: inline-flex;
+            transition: all 0.2s ease;
+            display: flex;
             align-items: center;
             gap: 0.5rem;
+            text-decoration: none;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
             color: white;
-            box-shadow: 0 8px 25px rgba(0, 58, 116, 0.3);
         }
 
         .btn-primary:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 15px 35px rgba(0, 58, 116, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
         }
 
         .btn-secondary {
-            background: var(--surface);
-            color: var(--text);
-            border: 1px solid var(--border);
+            background: rgba(148, 163, 184, 0.1);
+            color: #e2e8f0;
+            border: 1px solid rgba(148, 163, 184, 0.2);
         }
 
         .btn-secondary:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-medium);
+            background: rgba(148, 163, 184, 0.2);
         }
 
-        .main-container {
-            padding-top: 120px;
-            padding-bottom: 4rem;
-            min-height: 100vh;
+        /* Stats Bar */
+        .stats-bar {
+            background: rgba(15, 15, 35, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
         }
 
-        .content-wrapper {
+        .stats-content {
             max-width: 1600px;
             margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .dashboard-grid {
             display: grid;
-            grid-template-columns: 300px 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .sidebar {
-            position: sticky;
-            top: 120px;
-            height: fit-content;
-        }
-
-        .stats-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 2rem;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-medium);
-            margin-bottom: 1.5rem;
-        }
-
-        .stats-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            color: var(--text);
         }
 
         .stat-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            padding: 0.75rem;
-            background: var(--surface-dark);
-            border-radius: 12px;
-            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #60a5fa;
+            display: block;
         }
 
         .stat-label {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            font-weight: 500;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 0.25rem;
         }
 
-        .stat-value {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--accent);
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
         }
 
         .planner-container {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-large);
-            overflow: hidden;
+            max-width: 1600px;
+            margin: 0 auto;
         }
 
-        .planner-header {
-            background: linear-gradient(135deg, var(--primary) 0%, #005b9f 100%);
-            padding: 2rem;
-            color: white;
-            text-align: center;
-        }
-
-        .planner-title {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-        }
-
-        .planner-subtitle {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            font-weight: 500;
-        }
-
-        .years-grid {
+        /* Semester Grid */
+        .semester-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            min-height: 600px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
         }
 
-        .year-column {
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
+        .semester {
+            background: rgba(15, 15, 35, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
 
-        .year-column:last-child { border-right: none; }
-
-        .year-header {
-            background: var(--surface-dark);
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--border);
-            text-align: center;
-            position: relative;
-            cursor: pointer;
+        .semester:hover {
+            border-color: rgba(96, 165, 250, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
         }
-
-        .year-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 0.5rem;
-        }
-
-        .year-subtitle {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .year-progress {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--accent);
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            font-weight: 700;
-        }
-
-        .semester-section {
-            flex: 1;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .semester-section:last-child { border-bottom: none; }
 
         .semester-header {
-            background: var(--surface);
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            padding: 1.25rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
         }
 
         .semester-title {
-            font-size: 1rem;
+            font-size: 1.125rem;
             font-weight: 600;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
+            color: #f1f5f9;
+            margin-bottom: 0.25rem;
         }
 
-        .semester-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.9rem;
-            font-weight: 600;
+        .semester-credits {
+            font-size: 0.875rem;
+            color: #94a3b8;
         }
 
-        .fall-icon {
-            background: linear-gradient(135deg, var(--accent) 0%, #e6a700 100%);
-            color: var(--primary);
-        }
-
-        .spring-icon {
-            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
-            color: white;
-        }
-
-        .semester-stats {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .courses-container {
-            flex: 1;
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
+        .semester-body {
+            padding: 1.25rem;
             min-height: 200px;
-        }
-
-        .course-card {
-            background: var(--surface);
-            border: 2px solid var(--border);
-            border-radius: 16px;
-            padding: 1rem;
-            cursor: move;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
         }
 
-        .course-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-medium);
+        .drop-zone {
+            min-height: 160px;
+            border: 2px dashed transparent;
+            border-radius: 0.75rem;
+            padding: 0.5rem;
+            transition: all 0.3s ease;
         }
 
-        .course-card.completed {
-            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-            border-color: var(--success);
+        .drop-zone.drag-over {
+            border-color: #60a5fa;
+            background: rgba(96, 165, 250, 0.05);
+        }
+
+        /* Course Cards */
+        .course {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            cursor: grab;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .course:active {
+            cursor: grabbing;
+        }
+
+        .course:hover {
+            transform: translateY(-2px);
+            border-color: rgba(96, 165, 250, 0.4);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .course.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg) scale(1.05);
+            z-index: 1000;
+        }
+
+        .course::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            transition: width 0.3s ease;
+        }
+
+        .course:hover::before {
+            width: 5px;
         }
 
         .course-header {
             display: flex;
+            justify-content: space-between;
             align-items: flex-start;
-            gap: 0.75rem;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.5rem;
         }
-
-        .course-checkbox {
-            width: 24px;
-            height: 24px;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 2px;
-        }
-
-        .course-checkbox.checked {
-            background: var(--success);
-            border-color: var(--success);
-            color: white;
-        }
-
-        .course-info { flex: 1; min-width: 0; }
 
         .course-code {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 0.25rem;
-        }
-
-        .course-name {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            line-height: 1.4;
-            margin-bottom: 0.75rem;
-        }
-
-        .course-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .course-tag {
-            font-size: 0.7rem;
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .tag-core { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); color: #1e40af; }
-        .tag-math { background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%); color: #be185d; }
-        .tag-option { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); color: #065f46; }
-        .tag-core-req { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); color: #92400e; }
-        .tag-capstone { background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); color: #3730a3; }
-
-        .course-schedule {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .course-instructor {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .add-course-btn {
-            background: var(--surface-dark);
-            border: 2px dashed var(--border);
-            border-radius: 16px;
-            padding: 1rem;
-            color: var(--text-muted);
             font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            color: #f1f5f9;
+        }
+
+        .course-credits {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            min-height: 60px;
+            font-size: 0.75rem;
+            font-weight: 600;
         }
 
-        .add-course-btn:hover {
-            background: var(--surface);
-            border-color: var(--accent);
-            color: var(--accent);
-            transform: translateY(-1px);
+        .course-title {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            line-height: 1.3;
         }
 
         .course-actions {
             position: absolute;
-            top: 0.75rem;
-            right: 0.75rem;
-            display: flex;
-            gap: 0.5rem;
+            top: 0.5rem;
+            right: 0.5rem;
             opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .course-card:hover .course-actions { opacity: 1; }
-
-        .action-btn {
-            width: 28px;
-            height: 28px;
-            border: none;
-            background: var(--surface-dark);
-            border-radius: 8px;
+            transition: opacity 0.2s ease;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            gap: 0.25rem;
+        }
+
+        .course:hover .course-actions {
+            opacity: 1;
+        }
+
+        .course-action-btn {
+            width: 20px;
+            height: 20px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(148, 163, 184, 0.2);
+            color: #94a3b8;
             cursor: pointer;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            transition: all 0.3s ease;
+            font-size: 0.7rem;
+            transition: all 0.2s ease;
         }
 
-        .action-btn:hover {
-            background: var(--accent);
-            color: var(--primary);
-            transform: scale(1.1);
+        .course-action-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
         }
 
+        /* Course Types */
+        .physics-core::before { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .math-core::before { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .math-minor::before { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .physics-option::before { background: linear-gradient(135deg, #a855f7, #9333ea); }
+        .stem-elective::before { background: linear-gradient(135deg, #10b981, #059669); }
+        .liberal-learning::before { background: linear-gradient(135deg, #6b7280, #4b5563); }
+        .capstone::before { background: linear-gradient(135deg, #f97316, #ea580c); }
+
+        /* Course Bank */
+        .course-bank {
+            background: rgba(15, 15, 35, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .course-bank h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #f1f5f9;
+        }
+
+        .course-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .course-category {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 0.75rem;
+            padding: 1rem;
+        }
+
+        .category-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .course-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        /* Modal */
         .modal {
-            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
             z-index: 2000;
-            opacity: 0;
-            transition: all 0.3s ease;
         }
 
         .modal.active {
             display: flex;
-            opacity: 1;
-            align-items: center;
-            justify-content: center;
         }
 
         .modal-content {
-            background: var(--surface);
-            border-radius: 24px;
+            background: #1e293b;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 500px;
             width: 90%;
-            max-width: 600px;
-            max-height: 90vh;
+            max-height: 80vh;
             overflow-y: auto;
-            box-shadow: var(--shadow-large);
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
         }
 
-        .modal.active .modal-content { transform: scale(1); }
-
         .modal-header {
-            padding: 2rem;
-            border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 1.5rem;
         }
 
         .modal-title {
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--text);
+            color: #f1f5f9;
         }
 
-        .modal-close {
+        .close-btn {
             background: none;
             border: none;
             font-size: 1.5rem;
-            color: var(--text-muted);
+            color: #94a3b8;
             cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+            transition: color 0.2s ease;
         }
 
-        .modal-close:hover {
-            background: var(--surface-dark);
-            color: var(--text);
+        .close-btn:hover {
+            color: #ef4444;
         }
 
-        .modal-body { padding: 2rem; }
-
-        .form-group { margin-bottom: 1.5rem; }
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1rem;
+        }
 
         .form-label {
             display: block;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #e2e8f0;
+            margin-bottom: 0.5rem;
         }
 
-        .form-input, .form-select {
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 0.5rem;
+            color: #f1f5f9;
+            font-size: 0.875rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 0.5rem;
+            color: #f1f5f9;
+            font-size: 0.875rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .semester-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .course {
+            animation: slideIn 0.3s ease;
+        }
+
+        /* Add Course Button */
+        .add-course-btn {
             width: 100%;
             padding: 1rem;
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-family: inherit;
-            transition: all 0.3s ease;
-            background: var(--surface);
-        }
-
-        .form-input:focus, .form-select:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 4px rgba(253, 187, 48, 0.1);
-            transform: translateY(-1px);
-        }
-
-        .schedule-group {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .settings-panel {
-            position: fixed;
-            top: 80px;
-            right: -300px;
-            width: 300px;
-            height: calc(100% - 80px);
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border-left: 1px solid var(--border);
-            box-shadow: var(--shadow-medium);
-            z-index: 1500;
-            transition: right 0.4s ease;
-        }
-
-        .settings-panel.active { right: 0; }
-
-        .settings-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .settings-close {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--text-muted);
+            border: 2px dashed rgba(148, 163, 184, 0.3);
+            background: transparent;
+            color: #94a3b8;
+            border-radius: 0.75rem;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
         }
 
-        .settings-close:hover { color: var(--text); }
-
-        .settings-body { padding: 1.5rem; }
-
-        .setting-item {
-            margin-bottom: 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .add-course-btn:hover {
+            border-color: #60a5fa;
+            color: #60a5fa;
+            background: rgba(96, 165, 250, 0.05);
         }
 
-        .calendar-container {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-large);
-            padding: 2rem;
-            margin: 2rem auto;
-            max-width: 1600px;
-        }
-
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .calendar-title {
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border: none;
+            border-radius: 50%;
+            color: white;
             font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text);
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
         }
 
-        #calendar { margin-top: 1rem; }
-
-        .fc-daygrid-day-number { font-size: 0.9rem; font-weight: 500; }
-        .fc-daygrid-day { transition: background 0.3s ease; }
-        .fc-daygrid-day:hover { background: rgba(253, 187, 48, 0.1); }
-        .fc-event { border-radius: 4px; padding: 2px 4px; font-size: 0.8rem; }
-        .fc-event-time { display: none; }
-        .fc-daygrid-event-dot { border: none; }
-
-        @media (max-width: 1400px) {
-            .years-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-
-        @media (max-width: 1024px) {
-            .dashboard-grid { grid-template-columns: 1fr; }
-            .sidebar { position: relative; top: 0; }
-        }
-
-        @media (max-width: 768px) {
-            .years-grid { grid-template-columns: 1fr; }
+        .fab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4);
         }
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-brand">
-                <div class="nav-logo">
-                    <i class="fas fa-graduation-cap"></i>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-title">
+                    <h1>TCNJ Physics Course Planner</h1>
+                    <p>Interactive 4-Year Academic Planning Tool</p>
                 </div>
-                <div>
-                    <div class="nav-title">TCNJ Physics + Math</div>
-                    <div class="nav-subtitle">Degree Planner</div>
+                <div class="header-controls">
+                    <button class="btn btn-secondary" onclick="exportPlan()">📄 Export</button>
+                    <button class="btn btn-secondary" onclick="importPlan()">📁 Import</button>
+                    <button class="btn btn-primary" onclick="savePlan()">💾 Save Plan</button>
                 </div>
             </div>
-            <div class="nav-actions">
-                <div class="progress-ring">
-                    <svg width="60" height="60">
-                        <circle cx="30" cy="30" r="26" fill="none" stroke="#f1f5f9" stroke-width="4"></circle>
-                        <circle cx="30" cy="30" r="26" fill="none" stroke="var(--accent)" stroke-width="4" 
-                                stroke-linecap="round" stroke-dasharray="163.36" stroke-dashoffset="130" id="progressCircle"></circle>
-                    </svg>
-                    <div class="progress-text" id="progressText">20%</div>
+        </header>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stats-content">
+                <div class="stat-item">
+                    <span class="stat-number" id="totalCredits">128</span>
+                    <span class="stat-label">Total Credits</span>
                 </div>
-                <button class="btn btn-secondary" onclick="exportData()">
-                    <i class="fas fa-download"></i>
-                    Export
-                </button>
-                <button class="btn btn-primary" onclick="toggleSettings()">
-                    <i class="fas fa-cog"></i>
-                    Settings
-                </button>
+                <div class="stat-item">
+                    <span class="stat-number" id="physicsCredits">64</span>
+                    <span class="stat-label">Physics Credits</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="mathCredits">20</span>
+                    <span class="stat-label">Math Credits</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="completedSemesters">0/8</span>
+                    <span class="stat-label">Completed</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="avgCredits">16</span>
+                    <span class="stat-label">Avg/Semester</span>
+                </div>
             </div>
         </div>
-    </nav>
 
-    <main class="main-container">
-        <div class="content-wrapper">
-            <div class="dashboard-grid">
-                <div class="sidebar">
-                    <div class="stats-card">
-                        <h3 class="stats-title">📊 Progress Overview</h3>
-                        <div class="stat-item">
-                            <span class="stat-label">Total Credits</span>
-                            <span class="stat-value" id="totalCredits">128</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Completed</span>
-                            <span class="stat-value" id="completedCredits">8</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Remaining</span>
-                            <span class="stat-value" id="remainingCredits">120</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Physics Core</span>
-                            <span class="stat-value" id="physicsCore">2/11</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Math Minor</span>
-                            <span class="stat-value" id="mathMinor">2/5</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Major</span>
-                            <span class="stat-value" id="currentMajor">Not Set</span>
-                        </div>
-                        <button class="btn btn-secondary" style="width: 100%; margin-top: 1rem;" onclick="addMajor()">Save Major</button>
-                    </div>
-                </div>
-
-                <div class="planner-container">
-                    <div class="planner-header">
-                        <h1 class="planner-title">Four-Year Academic Plan</h1>
-                        <p class="planner-subtitle">Physics Major with Mathematics Minor • Class of 2028</p>
-                    </div>
-
-                    <div class="years-grid">
-                        <div class="year-column">
-                            <div class="year-header" onclick="toggleYear(this)">
-                                <div class="year-progress">25%</div>
-                                <div class="year-title">Freshman</div>
-                                <div class="year-subtitle">2024-2025</div>
-                            </div>
-                            <div class="semester-section">
-                                <div class="semester-header" onclick="toggleSemester(this.parentElement)">
-                                    <div class="semester-title">
-                                        <div class="semester-icon fall-icon">🍂</div>
-                                        Fall 2024
-                                    </div>
-                                    <div class="semester-stats" id="freshman-fall-stats">2 courses • 8 credits</div>
-                                </div>
-                                <div class="courses-container" id="freshman-fall" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
-                                    <div class="course-card completed" data-course="phy203" draggable="true" ondragstart="handleDragStart(event)">
-                                        <div class="course-actions">
-                                            <button class="action-btn" onclick="editCourse('phy203')"><i class="fas fa-edit"></i></button>
-                                            <button class="action-btn" onclick="deleteCourse('phy203')"><i class="fas fa-trash"></i></button>
-                                        </div>
-                                        <div class="course-header">
-                                            <div class="course-checkbox checked" onclick="toggleCourse(this)"><i class="fas fa-check"></i></div>
-                                            <div class="course-info">
-                                                <div class="course-code">PHY 203</div>
-                                                <div class="course-name">Physics I for Physicists</div>
-                                                <div class="course-meta"><div class="course-tag tag-core">Core</div></div>
-                                                <div class="course-schedule"><i class="fas fa-clock"></i><span>MWF 9:00-10:00 • 4 credits</span></div>
-                                                <div class="course-instructor"><i class="fas fa-chalkboard-teacher"></i><span>Dr. Smith</span></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="course-card completed" data-course="mat127" draggable="true" ondragstart="handleDragStart(event)">
-                                        <div class="course-actions">
-                                            <button class="action-btn" onclick="editCourse('mat127')"><i class="fas fa-edit"></i></button>
-                                            <button class="action-btn" onclick="deleteCourse('mat127')"><i class="fas fa-trash"></i></button>
-                                        </div>
-                                        <div class="course-header">
-                                            <div class="course-checkbox checked" onclick="toggleCourse(this)"><i class="fas fa-check"></i></div>
-                                            <div class="course-info">
-                                                <div class="course-code">MAT 127</div>
-                                                <div class="course-name">Calculus A</div>
-                                                <div class="course-meta"><div class="course-tag tag-math">Math</div></div>
-                                                <div class="course-schedule"><i class="fas fa-clock"></i><span>TTh 10:00-11:30 • 4 credits</span></div>
-                                                <div class="course-instructor"><i class="fas fa-chalkboard-teacher"></i><span>Prof. Johnson</span></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="add-course-btn" onclick="addCourse('freshman-fall')"><i class="fas fa-plus"></i><span>Add Course</span></div>
-                                </div>
-                            </div>
-                            <div class="semester-section">
-                                <div class="semester-header" onclick="toggleSemester(this.parentElement)">
-                                    <div class="semester-title">
-                                        <div class="semester-icon spring-icon">🌸</div>
-                                        Spring 2025
-                                    </div>
-                                    <div class="semester-stats" id="freshman-spring-stats">0 courses • 0 credits</div>
-                                </div>
-                                <div class="courses-container" id="freshman-spring" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
-                                    <div class="add-course-btn" onclick="addCourse('freshman-spring')"><i class="fas fa-plus"></i><span>Add Course</span></div>
-                                </div>
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="planner-container">
+                <!-- Course Bank -->
+                <div class="course-bank">
+                    <h3>Course Bank - Drag courses to semesters</h3>
+                    <div class="course-categories">
+                        <div class="course-category">
+                            <div class="category-title">Physics Core</div>
+                            <div class="course-list" id="physics-core-bank">
+                                <!-- Physics core courses will be populated here -->
                             </div>
                         </div>
-                        <div class="year-column">
-                            <div class="year-header" onclick="toggleYear(this)">
-                                <div class="year-progress">0%</div>
-                                <div class="year-title">Sophomore</div>
-                                <div class="year-subtitle">2025-2026</div>
-                            </div>
-                            <div class="semester-section collapsed">
-                                <div class="semester-header" onclick="toggleSemester(this.parentElement)">
-                                    <div class="semester-title">
-                                        <div class="semester-icon fall-icon">🍂</div>
-                                        Fall 2025
-                                    </div>
-                                    <div class="semester-stats" id="sophomore-fall-stats">0 courses • 0 credits</div>
-                                </div>
-                                <div class="courses-container" id="sophomore-fall" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
-                                    <div class="add-course-btn" onclick="addCourse('sophomore-fall')"><i class="fas fa-plus"></i><span>Add Course</span></div>
-                                </div>
-                            </div>
-                            <div class="semester-section collapsed">
-                                <div class="semester-header" onclick="toggleSemester(this.parentElement)">
-                                    <div class="semester-title">
-                                        <div class="semester-icon spring-icon">🌸</div>
-                                        Spring 2026
-                                    </div>
-                                    <div class="semester-stats" id="sophomore-spring-stats">0 courses • 0 credits</div>
-                                </div>
-                                <div class="courses-container" id="sophomore-spring" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
-                                    <div class="add-course-btn" onclick="addCourse('sophomore-spring')"><i class="fas fa-plus"></i><span>Add Course</span></div>
-                                </div>
+                        <div class="course-category">
+                            <div class="category-title">Mathematics</div>
+                            <div class="course-list" id="math-bank">
+                                <!-- Math courses will be populated here -->
                             </div>
                         </div>
-                        <div class="year-column">
-                            <div class="year-header" onclick="toggleYear(this)">
-                                <div class="year-progress">0%</div>
-                                <div class="year-title">Junior</div>
-                                <div class="year-subtitle">2026-2027</div>
-                            </div>
-                            <div class="semester-section collapsed">
-                                <div class="semester-header" onclick="toggleSemester(this.parentElement)">
-                                    <div class="semester-title">
-                                        <div class="semester-icon fall-icon">🍂</div>
-                                        Fall 2026
-                                    </div>
-                                    <div class="semester-stats" id="junior-fall-stats">0 courses • 0 credits</div>
-                                </div>
-                                <div class="courses-container" id="junior-fall" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
-                                    <div class="add-course-btn" onclick="addCourse('junior-fall')"><i class="fas fa-plus"></i><span>Add Course</span></div>
-                                </div>
-                            </div>
-                            <div class="semester-section collapsed">
-                                <div class="semester-header" onclick="toggleSemester(this.parentElement)">
-                                    <div class="semester-title">
-                                        <div class="semester-icon spring-icon">🌸</div>
-                                        Spring 2027
-                                    </div>
-                                    <div class="semester-stats" id="junior-spring-stats">0 courses • 0 credits</div>
-                                </div>
-                                <div class="courses-container" id="junior-spring" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
-                                    <div class="add-course-btn" onclick="addCourse('junior-spring')"><i class="fas fa-plus"></i><span>Add Course</span></div>
-                                </div>
+                        <div class="course-category">
+                            <div class="category-title">Physics Options</div>
+                            <div class="course-list" id="physics-options-bank">
+                                <!-- Physics option courses will be populated here -->
                             </div>
                         </div>
-                        <div class="year-column">
-                            <div class="year-header" onclick="toggleYear(this)">
-                                <div class="year-progress">0%</div>
-                                <div class="year-title">Senior</div>
-                                <div class="year-subtitle">2027-2028</div>
-                            </div>
-                            <div class="semester-section collapsed">
-                                <div class="semester-header" onclick="toggleSemester(this.parentElement)">
-                                    <div class="semester-title">
-                                        <div class="semester-icon fall-icon">🍂</div>
-                                        Fall 2027
-                                    </div>
-                                    <div class="semester-stats" id="senior-fall-stats">0 courses • 0 credits</div>
-                                </div>
-                                <div class="courses-container" id="senior-fall" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
-                                    <div class="add-course-btn" onclick="addCourse('senior-fall')"><i class="fas fa-plus"></i><span>Add Course</span></div>
-                                </div>
-                            </div>
-                            <div class="semester-section collapsed">
-                                <div class="semester-header" onclick="toggleSemester(this.parentElement)">
-                                    <div class="semester-title">
-                                        <div class="semester-icon spring-icon">🌸</div>
-                                        Spring 2028
-                                    </div>
-                                    <div class="semester-stats" id="senior-spring-stats">0 courses • 0 credits</div>
-                                </div>
-                                <div class="courses-container" id="senior-spring" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
-                                    <div class="add-course-btn" onclick="addCourse('senior-spring')"><i class="fas fa-plus"></i><span>Add Course</span></div>
-                                </div>
+                        <div class="course-category">
+                            <div class="category-title">STEM Electives</div>
+                            <div class="course-list" id="stem-bank">
+                                <!-- STEM electives will be populated here -->
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </main>
 
-    <footer>
-        <div class="calendar-container">
-            <div class="calendar-header">
-                <h3 class="calendar-title">📅 Semester Calendar</h3>
-                <select id="semesterSelect" class="form-select" onchange="updateCalendar()">
-                    <option value="freshman-fall">Fall 2024</option>
-                    <option value="freshman-spring">Spring 2025</option>
-                    <option value="sophomore-fall">Fall 2025</option>
-                    <option value="sophomore-spring">Spring 2026</option>
-                    <option value="junior-fall">Fall 2026</option>
-                    <option value="junior-spring">Spring 2027</option>
-                    <option value="senior-fall">Fall 2027</option>
-                    <option value="senior-spring">Spring 2028</option>
-                </select>
+                <!-- Semester Grid -->
+                <div class="semester-grid">
+                    <!-- 8 semesters will be generated dynamically -->
+                </div>
             </div>
-            <div id="calendar"></div>
-        </div>
-    </footer>
+        </main>
 
+        <!-- Floating Action Button -->
+        <button class="fab" onclick="addCustomCourse()" title="Add Custom Course">+</button>
+    </div>
+
+    <!-- Modal for Course Details -->
     <div class="modal" id="courseModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title" id="modalTitle">Add Course</h2>
-                <button class="modal-close" onclick="closeModal()">×</button>
+                <h2 class="modal-title" id="modalTitle">Course Details</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
             </div>
-            <div class="modal-body">
-                <form id="courseForm">
-                    <div class="form-group">
-                        <label class="form-label" for="courseSelect">Select Course</label>
-                        <select id="courseSelect" class="form-select">
-                            <option value="">-- Select a course --</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="courseCode">Course Code</label>
-                        <input type="text" id="courseCode" class="form-input" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="courseName">Course Name</label>
-                        <input type="text" id="courseName" class="form-input" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="courseCredits">Credits</label>
-                        <input type="number" id="courseCredits" class="form-input" min="1" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="courseType">Type</label>
-                        <select id="courseType" class="form-select">
-                            <option value="core">Physics Core</option>
-                            <option value="math">Math</option>
-                            <option value="core-req">College Core</option>
-                            <option value="option">Physics Option</option>
-                            <option value="capstone">Capstone</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Schedule</label>
-                        <div class="schedule-group">
-                            <select id="courseDays" class="form-select" multiple required>
-                                <option value="M">Monday</option>
-                                <option value="T">Tuesday</option>
-                                <option value="W">Wednesday</option>
-                                <option value="R">Thursday</option>
-                                <option value="F">Friday</option>
-                            </select>
-                            <input type="time" id="courseStartTime" class="form-input" required>
-                            <input type="time" id="courseEndTime" class="form-input" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="courseInstructor">Instructor</label>
-                        <input type="text" id="courseInstructor" class="form-input" placeholder="e.g., Dr. Smith">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Save Course</button>
-                </form>
+            <div id="modalBody">
+                <!-- Modal content will be populated dynamically -->
             </div>
         </div>
     </div>
 
-    <div class="modal" id="majorModal">
+    <!-- Modal for Adding Custom Course -->
+    <div class="modal" id="addCourseModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Save Major</h2>
-                <button class="modal-close" onclick="closeModal()">×</button>
+                <h2 class="modal-title">Add Custom Course</h2>
+                <button class="close-btn" onclick="closeAddCourseModal()">&times;</button>
             </div>
-            <div class="modal-body">
-                <form id="majorForm">
-                    <div class="form-group">
-                        <label class="form-label" for="majorName">Major Name</label>
-                        <input type="text" id="majorName" class="form-input" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Save Major</button>
-                </form>
-            </div>
+            <form id="addCourseForm">
+                <div class="form-group">
+                    <label class="form-label">Course Code</label>
+                    <input type="text" class="form-input" id="courseCode" placeholder="e.g., PHY 425" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Course Title</label>
+                    <input type="text" class="form-input" id="courseTitle" placeholder="e.g., Plasma Physics" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Credits</label>
+                    <input type="number" class="form-input" id="courseCredits" min="0" max="8" value="4" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Course Type</label>
+                    <select class="form-select" id="courseType" required>
+                        <option value="physics-core">Physics Core</option>
+                        <option value="math-core">Math Core</option>
+                        <option value="physics-option">Physics Option</option>
+                        <option value="stem-elective">STEM Elective</option>
+                        <option value="liberal-learning">Liberal Learning</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description (Optional)</label>
+                    <textarea class="form-input" id="courseDescription" rows="3" placeholder="Course description..."></textarea>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button type="button" class="btn btn-secondary" onclick="closeAddCourseModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Course</button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <div class="settings-panel" id="settingsPanel">
-        <div class="settings-header">
-            <h2 class="modal-title">Settings</h2>
-            <button class="settings-close" onclick="toggleSettings()">×</button>
-        </div>
-        <div class="settings-body">
-            <div class="setting-item">
-                <span class="stat-label">Theme</span>
-                <select id="themeSelect" class="form-select" onchange="changeTheme()">
-                    <option value="light">Light</option>
-                    <option value="dark">Dark</option>
-                </select>
-            </div>
-            <div class="setting-item">
-                <span class="stat-label">Export Format</span>
-                <select id="exportFormat" class="form-select">
-                    <option value="pdf">PDF</option>
-                    <option value="csv">CSV</option>
-                    <option value="calendar">Google Calendar</option>
-                </select>
-            </div>
-            <button class="btn btn-secondary" style="width: 100%; margin-top: 1rem;" onclick="syncWithGoogleCalendar()">Sync with Google Calendar</button>
-        </div>
-    </div>
-
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
     <script>
-        // Load persisted data from localStorage
-        let semesterCourses = JSON.parse(localStorage.getItem('semesterCourses')) || {
-            'freshman-fall': [
-                { code: 'PHY 203', name: 'Physics I for Physicists', days: ['M', 'W', 'F'], startTime: '09:00', endTime: '10:00', credits: 4, type: 'core', instructor: 'Dr. Smith', completed: true },
-                { code: 'MAT 127', name: 'Calculus A', days: ['T', 'R'], startTime: '10:00', endTime: '11:30', credits: 4, type: 'math', instructor: 'Prof. Johnson', completed: true }
-            ],
-            'freshman-spring': [],
-            'sophomore-fall': [],
-            'sophomore-spring': [],
-            'junior-fall': [],
-            'junior-spring': [],
-            'senior-fall': [],
-            'senior-spring': []
+        // Course data
+        const courseDatabase = {
+            'PHY099': { title: 'Orientation to Physics', credits: 0, type: 'physics-core', description: 'Required entry course covering degree requirements and academic advisement.' },
+            'PHY203': { title: 'Physics I for Physicists', credits: 4, type: 'physics-core', description: 'Accelerated calculus-based introductory physics for Physics majors.' },
+            'PHY204': { title: 'Physics II for Physicists', credits: 4, type: 'physics-core', description: 'Electricity and magnetism, optics, and thermal physics.' },
+            'PHY299': { title: 'Research Fundamentals', credits: 1, type: 'physics-core', description: 'Introduction to physics research methods and scientific writing.' },
+            'PHY306': { title: 'Mathematical Physics I', credits: 4, type: 'physics-core', description: 'Mathematical methods including complex analysis and differential equations.' },
+            'PHY321': { title: 'Modern Physics', credits: 4, type: 'physics-core', description: 'Quantum mechanics, atomic physics, and special relativity.' },
+            'PHY356': { title: 'Thermal Physics', credits: 4, type: 'physics-core', description: 'Thermodynamics and statistical mechanics.' },
+            'PHY401': { title: 'Classical Mechanics', credits: 4, type: 'physics-core', description: 'Advanced classical mechanics with Lagrangian formulation.' },
+            'PHY421': { title: 'Electromagnetic Theory I', credits: 4, type: 'physics-core', description: 'Maxwell equations and electromagnetic waves.' },
+            'PHY451': { title: 'Advanced Experimental Physics', credits: 4, type: 'capstone', description: 'Capstone laboratory course with independent projects.' },
+            
+            'MAT127': { title: 'Calculus A', credits: 4, type: 'math-core', description: 'Beginning calculus with differentiation and integration.' },
+            'MAT128': { title: 'Calculus B', credits: 4, type: 'math-core', description: 'Transcendental functions, series, and integration methods.' },
+            'MAT229': { title: 'Multivariable Calculus', credits: 4, type: 'math-minor', description: 'Vector calculus and multidimensional analysis.' },
+            'MAT200': { title: 'Discrete Mathematics', credits: 4, type: 'math-minor', description: 'Logic, proof techniques, and combinatorics.' },
+            'MAT205': { title: 'Linear Algebra', credits: 4, type: 'math-minor', description: 'Vector spaces, matrices, and eigenvalues.' },
+            'MAT326': { title: 'Differential Equations', credits: 4, type: 'math-minor', description: 'Ordinary differential equations and applications.' },
+            'MAT316': { title: 'Probability', credits: 4, type: 'math-minor', description: 'Probability theory and random variables.' },
+            
+            'PHY311': { title: 'Analog & Digital Electronics', credits: 4, type: 'physics-option', description: 'Circuit analysis and digital logic with lab.' },
+            'PHY411': { title: 'Optics & Wave Motion', credits: 4, type: 'physics-option', description: 'Geometric and physical optics, interference, diffraction.' },
+            'PHY422': { title: 'Electromagnetic Theory II', credits: 4, type: 'physics-option', description: 'Advanced electromagnetic theory and radiation.' },
+            'PHY431': { title: 'Quantum Mechanics', credits: 4, type: 'physics-option', description: 'Schrödinger equation and quantum applications.' },
+            'PHY413': { title: 'General Relativity & Cosmology', credits: 4, type: 'physics-option', description: 'Einstein relativity and cosmological models.' },
+            'PHY425': { title: 'Plasma Physics', credits: 4, type: 'physics-option', description: 'Physics of ionized gases and plasma applications.' },
+            'PHY426': { title: 'Nuclear & Particle Physics', credits: 4, type: 'physics-option', description: 'Nuclear structure and elementary particles.' },
+            
+            'CHE201': { title: 'General Chemistry I', credits: 4, type: 'stem-elective', description: 'Fundamental chemistry principles with lab.' },
+            'CHE202': { title: 'General Chemistry II', credits: 4, type: 'stem-elective', description: 'Advanced chemistry topics with lab.' },
+            'CSC220': { title: 'Computational Problem Solving', credits: 4, type: 'stem-elective', description: 'Programming for scientific applications.' },
+            'BIO201': { title: 'Foundations of Biology', credits: 4, type: 'stem-elective', description: 'Introduction to biological principles.' },
+            'ENG272': { title: 'Advanced Engineering Math', credits: 4, type: 'stem-elective', description: 'Mathematical methods for engineering.' }
         };
-        let availableCourses = JSON.parse(localStorage.getItem('availableCourses')) || [
-            ...semesterCourses['freshman-fall'],
-            { code: 'PHY 204', name: 'Physics II for Physicists', days: ['M', 'W', 'F'], startTime: '10:30', endTime: '11:30', credits: 4, type: 'core', instructor: 'Dr. Brown' },
-            { code: 'MAT 128', name: 'Calculus B', days: ['T', 'R'], startTime: '13:00', endTime: '14:30', credits: 4, type: 'math', instructor: 'Prof. Davis' }
-        ];
-        let currentMajor = localStorage.getItem('currentMajor') || 'Not Set';
 
-        // Function to save state to localStorage
-        function saveState() {
-            localStorage.setItem('semesterCourses', JSON.stringify(semesterCourses));
-            localStorage.setItem('availableCourses', JSON.stringify(availableCourses));
-            localStorage.setItem('currentMajor', currentMajor);
+        // App state
+        let semesters = Array(8).fill().map(() => []);
+        let courseBank = {
+            'physics-core': ['PHY099', 'PHY203', 'PHY204', 'PHY299', 'PHY306', 'PHY321', 'PHY356', 'PHY401', 'PHY421'],
+            'math': ['MAT127', 'MAT128', 'MAT229', 'MAT200', 'MAT205', 'MAT326', 'MAT316'],
+            'physics-options': ['PHY311', 'PHY411', 'PHY422', 'PHY431', 'PHY413', 'PHY425', 'PHY426', 'PHY451'],
+            'stem': ['CHE201', 'CHE202', 'CSC220', 'BIO201', 'ENG272']
+        };
+
+        // Initialize the app
+        function initializeApp() {
+            createSemesters();
+            populateCourseBank();
+            loadDefaultPlan();
+            updateStats();
         }
 
-        function openModal(mode = 'add', semesterId = '', courseId = '', major = false) {
-            const modal = document.getElementById(major ? 'majorModal' : 'courseModal');
-            const title = document.getElementById('modalTitle');
-            const form = document.getElementById(major ? 'majorForm' : 'courseForm');
-            const courseSelect = document.getElementById('courseSelect');
+        function createSemesters() {
+            const grid = document.querySelector('.semester-grid');
+            const semesterNames = [
+                'Fall Freshman', 'Spring Freshman',
+                'Fall Sophomore', 'Spring Sophomore', 
+                'Fall Junior', 'Spring Junior',
+                'Fall Senior', 'Spring Senior'
+            ];
 
-            if (!major) {
-                courseSelect.innerHTML = '<option value="">-- Select a course --</option>';
-                availableCourses.forEach(course => {
-                    const option = document.createElement('option');
-                    option.value = course.code;
-                    option.textContent = `${course.code} - ${course.name}`;
-                    courseSelect.appendChild(option);
-                });
-
-                if (mode === 'add') {
-                    title.textContent = 'Add Course';
-                    resetForm();
-                } else if (mode === 'edit') {
-                    title.textContent = 'Edit Course';
-                    loadCourseData(courseId);
-                }
-            } else {
-                title.textContent = 'Save Major';
-                document.getElementById('majorName').value = currentMajor === 'Not Set' ? '' : currentMajor;
-            }
-            modal.classList.add('active');
-
-            const submitHandler = (e) => {
-                e.preventDefault();
-                if (major) addMajorSubmit();
-                else if (mode === 'add') addCourseSubmit(semesterId);
-                else editCourseSubmit(courseId);
-            };
-            form.removeEventListener('submit', submitHandler);
-            form.addEventListener('submit', submitHandler);
-        }
-
-        function resetForm() {
-            document.getElementById('courseCode').value = '';
-            document.getElementById('courseName').value = '';
-            document.getElementById('courseCredits').value = '';
-            document.getElementById('courseType').value = '';
-            document.getElementById('courseDays').selectedIndex = -1;
-            document.getElementById('courseStartTime').value = '';
-            document.getElementById('courseEndTime').value = '';
-            document.getElementById('courseInstructor').value = '';
-            document.getElementById('courseSelect').value = '';
-        }
-
-        document.getElementById('courseSelect').addEventListener('change', function() {
-            const selectedCode = this.value;
-            const selectedCourse = availableCourses.find(course => course.code === selectedCode);
-            if (selectedCourse) {
-                document.getElementById('courseCode').value = selectedCourse.code;
-                document.getElementById('courseName').value = selectedCourse.name;
-                document.getElementById('courseCredits').value = selectedCourse.credits;
-                document.getElementById('courseType').value = selectedCourse.type;
-                document.getElementById('courseDays').value = selectedCourse.days;
-                document.getElementById('courseStartTime').value = selectedCourse.startTime;
-                document.getElementById('courseEndTime').value = selectedCourse.endTime;
-                document.getElementById('courseInstructor').value = selectedCourse.instructor || '';
-            } else resetForm();
-        });
-
-        function closeModal() {
-            document.querySelectorAll('.modal').forEach(modal => modal.classList.remove('active'));
-            resetForm();
-        }
-
-        function addCourse(semesterId) {
-            openModal('add', semesterId);
-        }
-
-        function addCourseSubmit(semesterId) {
-            const code = document.getElementById('courseCode').value.trim();
-            const name = document.getElementById('courseName').value.trim();
-            const credits = document.getElementById('courseCredits').value.trim();
-            const type = document.getElementById('courseType').value.trim();
-            const days = Array.from(document.getElementById('courseDays').selectedOptions).map(opt => opt.value);
-            const startTime = document.getElementById('courseStartTime').value;
-            const endTime = document.getElementById('courseEndTime').value;
-            const instructor = document.getElementById('courseInstructor').value.trim();
-
-            if (!code || !name || !credits || !type || days.length === 0 || !startTime || !endTime) {
-                alert('Please fill in all required fields, including at least one day and valid times.');
-                return;
-            }
-
-            const courseId = code.toLowerCase().replace(/\s+/g, '');
-            const container = document.getElementById(semesterId);
-            if (!container) {
-                alert('Invalid semester selected.');
-                return;
-            }
-
-            const scheduleText = `${days.join('')} ${startTime}-${endTime}`;
-            const courseHTML = `
-                <div class="course-card" data-course="${courseId}" draggable="true" ondragstart="handleDragStart(event)">
-                    <div class="course-actions">
-                        <button class="action-btn" onclick="editCourse('${courseId}')"><i class="fas fa-edit"></i></button>
-                        <button class="action-btn" onclick="deleteCourse('${courseId}')"><i class="fas fa-trash"></i></button>
+            semesterNames.forEach((name, index) => {
+                const semester = document.createElement('div');
+                semester.className = 'semester';
+                semester.innerHTML = `
+                    <div class="semester-header">
+                        <div class="semester-title">${name}</div>
+                        <div class="semester-credits">0 credits</div>
                     </div>
-                    <div class="course-header">
-                        <div class="course-checkbox" onclick="toggleCourse(this)"><i class="fas fa-check"></i></div>
-                        <div class="course-info">
-                            <div class="course-code">${code}</div>
-                            <div class="course-name">${name}</div>
-                            <div class="course-meta"><div class="course-tag tag-${type}">${type.charAt(0).toUpperCase() + type.slice(1)}</div></div>
-                            <div class="course-schedule"><i class="fas fa-clock"></i><span>${scheduleText} • ${credits} credits</span></div>
-                            <div class="course-instructor"><i class="fas fa-chalkboard-teacher"></i><span>${instructor || 'TBA'}</span></div>
+                    <div class="semester-body">
+                        <div class="drop-zone" data-semester="${index}">
+                            <button class="add-course-btn" onclick="showAddCourseToSemester(${index})">
+                                + Add Course
+                            </button>
                         </div>
                     </div>
-                </div>
-            `;
-            container.insertAdjacentHTML('beforeend', courseHTML);
-            semesterCourses[semesterId].push({ code, name, days, startTime, endTime, credits, type, instructor, completed: false });
-            saveState();
-            updateStats(semesterId);
-            updateCalendar();
-            syncToGoogleCalendar([{
-                summary: `${code} - ${name}`,
-                start: { dateTime: new Date(2025, 0, 1, startTime.split(':')[0], startTime.split(':')[1]).toISOString() },
-                end: { dateTime: new Date(2025, 0, 1, endTime.split(':')[0], endTime.split(':')[1]).toISOString() },
-                recurrence: ['RRULE:FREQ=WEEKLY;UNTIL=20251231T235959Z']
-            }]);
-            closeModal();
-        }
-
-        function editCourse(courseId) { openModal('edit', '', courseId); }
-
-        function loadCourseData(courseId) {
-            const semesterId = Object.keys(semesterCourses).find(sem => semesterCourses[sem].find(c => c.code.toLowerCase().replace(/\s+/g, '') === courseId));
-            const course = semesterCourses[semesterId].find(c => c.code.toLowerCase().replace(/\s+/g, '') === courseId);
-            document.getElementById('courseCode').value = course.code;
-            document.getElementById('courseName').value = course.name;
-            document.getElementById('courseCredits').value = course.credits;
-            document.getElementById('courseType').value = course.type;
-            document.getElementById('courseDays').value = course.days;
-            document.getElementById('courseStartTime').value = course.startTime;
-            document.getElementById('courseEndTime').value = course.endTime;
-            document.getElementById('courseInstructor').value = course.instructor || '';
-            document.getElementById('courseSelect').value = course.code;
-        }
-
-        function editCourseSubmit(courseId) {
-            const code = document.getElementById('courseCode').value;
-            const name = document.getElementById('courseName').value;
-            const credits = document.getElementById('courseCredits').value;
-            const type = document.getElementById('courseType').value;
-            const days = Array.from(document.getElementById('courseDays').selectedOptions).map(opt => opt.value).join('');
-            const startTime = document.getElementById('courseStartTime').value;
-            const endTime = document.getElementById('courseEndTime').value;
-            const instructor = document.getElementById('courseInstructor').value;
-
-            const semesterId = Object.keys(semesterCourses).find(sem => semesterCourses[sem].find(c => c.code.toLowerCase().replace(/\s+/g, '') === courseId));
-            const courseIndex = semesterCourses[semesterId].findIndex(c => c.code.toLowerCase().replace(/\s+/g, '') === courseId);
-            semesterCourses[semesterId][courseIndex] = { code, name, days: days.split(''), startTime, endTime, credits, type, instructor, completed: semesterCourses[semesterId][courseIndex].completed };
-            saveState();
-
-            const courseCard = document.querySelector(`[data-course="${courseId}"]`);
-            const scheduleText = `${days} ${startTime}-${endTime}`;
-            courseCard.querySelector('.course-code').textContent = code;
-            courseCard.querySelector('.course-name').textContent = name;
-            courseCard.querySelector('.course-tag').textContent = type.charAt(0).toUpperCase() + type.slice(1);
-            courseCard.querySelector('.course-tag').className = `course-tag tag-${type}`;
-            courseCard.querySelector('.course-schedule span').textContent = `${scheduleText} • ${credits} credits`;
-            courseCard.querySelector('.course-instructor span').textContent = instructor || 'TBA';
-            courseCard.setAttribute('data-course', code.toLowerCase().replace(/\s+/g, ''));
-            updateStats(semesterId);
-            updateCalendar();
-            syncToGoogleCalendar([{
-                summary: `${code} - ${name}`,
-                start: { dateTime: new Date(2025, 0, 1, startTime.split(':')[0], startTime.split(':')[1]).toISOString() },
-                end: { dateTime: new Date(2025, 0, 1, endTime.split(':')[0], endTime.split(':')[1]).toISOString() },
-                recurrence: ['RRULE:FREQ=WEEKLY;UNTIL=20251231T235959Z']
-            }]);
-            closeModal();
-        }
-
-        function deleteCourse(courseId) {
-            if (confirm('Are you sure you want to delete this course?')) {
-                const semesterId = Object.keys(semesterCourses).find(sem => semesterCourses[sem].find(c => c.code.toLowerCase().replace(/\s+/g, '') === courseId));
-                semesterCourses[semesterId] = semesterCourses[semesterId].filter(c => c.code.toLowerCase().replace(/\s+/g, '') !== courseId);
-                saveState();
-                const courseCard = document.querySelector(`[data-course="${courseId}"]`);
-                courseCard.remove();
-                updateStats(semesterId);
-                updateCalendar();
-            }
-        }
-
-        function toggleCourse(checkbox) {
-            const courseCard = checkbox.closest('.course-card');
-            const courseId = courseCard.dataset.course;
-            const semesterId = Object.keys(semesterCourses).find(sem => semesterCourses[sem].find(c => c.code.toLowerCase().replace(/\s+/g, '') === courseId));
-            const course = semesterCourses[semesterId].find(c => c.code.toLowerCase().replace(/\s+/g, '') === courseId);
-            course.completed = !course.completed;
-            saveState();
-            checkbox.classList.toggle('checked');
-            courseCard.classList.toggle('completed');
-            updateStats(semesterId);
-            updateCalendar();
-        }
-
-        let draggedCourse = null;
-
-        function handleDragStart(e) {
-            draggedCourse = e.target.closest('.course-card');
-            e.dataTransfer.setData('text/plain', draggedCourse.dataset.course);
-            draggedCourse.classList.add('dragging');
-        }
-
-        function handleDragOver(e) {
-            e.preventDefault();
-            e.target.closest('.courses-container')?.classList.add('drag-over');
-        }
-
-        function handleDrop(e) {
-            e.preventDefault();
-            const container = e.target.closest('.courses-container');
-            if (container && draggedCourse) {
-                const courseId = draggedCourse.dataset.course;
-                const oldSemesterId = Object.keys(semesterCourses).find(sem => semesterCourses[sem].find(c => c.code.toLowerCase().replace(/\s+/g, '') === courseId));
-                const course = semesterCourses[oldSemesterId].find(c => c.code.toLowerCase().replace(/\s+/g, '') === courseId);
-                semesterCourses[oldSemesterId] = semesterCourses[oldSemesterId].filter(c => c.code.toLowerCase().replace(/\s+/g, '') !== courseId);
-                const newSemesterId = container.id;
-                semesterCourses[newSemesterId].push(course);
-                saveState();
-                container.insertBefore(draggedCourse, container.querySelector('.add-course-btn'));
-                container.classList.remove('drag-over');
-                draggedCourse.classList.remove('dragging');
-                draggedCourse = null;
-                updateStats(oldSemesterId);
-                updateStats(newSemesterId);
-                updateCalendar();
-            }
-        }
-
-        function updateStats(semesterId) {
-            const container = document.getElementById(semesterId);
-            const courses = container.querySelectorAll('.course-card');
-            let totalCredits = 0, physicsCoreCount = 0, mathMinorCount = 0, completedCredits = 0;
-
-            courses.forEach(course => {
-                const creditsText = course.querySelector('.course-schedule span').textContent;
-                const credits = parseInt(creditsText.split(' • ')[creditsText.split(' • ').length - 1]) || 0;
-                totalCredits += credits;
-                if (course.classList.contains('completed')) completedCredits += credits;
-                const type = course.querySelector('.course-tag').textContent.toLowerCase();
-                if (type === 'core') physicsCoreCount++;
-                if (type === 'math') mathMinorCount++;
+                `;
+                grid.appendChild(semester);
             });
 
-            const courseCount = courses.length;
-            document.getElementById(`${semesterId}-stats`).textContent = `${courseCount} courses • ${totalCredits} credits`;
-            document.getElementById('completedCredits').textContent = completedCredits;
-            document.getElementById('remainingCredits').textContent = 128 - completedCredits;
-            document.getElementById('physicsCore').textContent = `${physicsCoreCount}/11`;
-            document.getElementById('mathMinor').textContent = `${mathMinorCount}/5`;
-
-            const allCourses = document.querySelectorAll('.course-card').length;
-            const completedCourses = document.querySelectorAll('.course-card.completed').length;
-            const progress = allCourses > 0 ? Math.round((completedCourses / allCourses) * 100) : 0;
-            document.getElementById('progressText').textContent = `${progress}%`;
-            const progressCircle = document.getElementById('progressCircle');
-            const circumference = 2 * Math.PI * 26;
-            progressCircle.style.strokeDashoffset = circumference - (progress / 100) * circumference;
-
-            const yearColumn = container.closest('.year-column');
-            const yearCourses = yearColumn.querySelectorAll('.course-card');
-            const yearCompleted = yearColumn.querySelectorAll('.course-card.completed').length;
-            yearColumn.querySelector('.year-progress').textContent = `${yearCourses.length > 0 ? Math.round((yearCompleted / yearCourses.length) * 100) : 0}%`;
+            setupDragAndDrop();
         }
 
-        function toggleYear(element) {
-            element.closest('.year-column').querySelectorAll('.semester-section').forEach(section => section.classList.toggle('collapsed'));
-        }
+        function populateCourseBank() {
+            Object.entries(courseBank).forEach(([category, courses]) => {
+                const container = document.getElementById(`${category.replace('-', '-')}-bank`);
+                if (!container) return;
 
-        function toggleSemester(element) {
-            element.classList.toggle('collapsed');
-        }
-
-        function toggleSettings() {
-            document.getElementById('settingsPanel').classList.toggle('active');
-        }
-
-        function changeTheme() {
-            const theme = document.getElementById('themeSelect').value;
-            if (theme === 'dark') {
-                document.body.style.background = 'linear-gradient(135deg, #1e293b 0%, #334155 100%)';
-                document.querySelectorAll('.stats-card, .planner-container, .modal-content, .settings-panel, .calendar-container').forEach(el => el.style.background = 'rgba(30, 41, 59, 0.95)');
-                document.querySelectorAll('.stat-item, .semester-header, .course-card, .fc-daygrid-day').forEach(el => el.style.background = '#2d3b4f');
-                document.documentElement.style.setProperty('--text', '#f1f5f9');
-                document.documentElement.style.setProperty('--text-muted', '#94a3b8');
-                document.documentElement.style.setProperty('--surface', '#1e293b');
-                document.documentElement.style.setProperty('--surface-dark', '#2d3b4f');
-            } else {
-                document.body.style.background = 'linear-gradient(135deg, var(--primary) 0%, #005b9f 100%)';
-                document.querySelectorAll('.stats-card, .planner-container, .modal-content, .settings-panel, .calendar-container').forEach(el => el.style.background = 'var(--glass-bg)');
-                document.querySelectorAll('.stat-item, .semester-header, .course-card, .fc-daygrid-day').forEach(el => el.style.background = 'var(--surface)');
-                document.documentElement.style.setProperty('--text', '#0f172a');
-                document.documentElement.style.setProperty('--text-muted', '#64748b');
-                document.documentElement.style.setProperty('--surface', '#ffffff');
-                document.documentElement.style.setProperty('--surface-dark', '#f8fafc');
-            }
-            updateCalendar();
-        }
-
-        function exportData() {
-            const format = document.getElementById('exportFormat').value;
-            if (format === 'pdf') {
-                alert('Exporting as PDF... (Feature coming soon!)');
-            } else if (format === 'csv') {
-                alert('Exporting as CSV... (Feature coming soon!)');
-            } else if (format === 'calendar') {
-                syncWithGoogleCalendar();
-            }
-        }
-
-        function getDayOfWeekIndex(dayChar) {
-            const days = { M: 1, T: 2, W: 3, R: 4, F: 5 };
-            return days[dayChar] || 0;
-        }
-
-        function generateCalendarEvents(semesterId) {
-            const [yearPart, seasonPart] = semesterId.split('-');
-            const year = yearPart === 'freshman' ? 2024 : yearPart === 'sophomore' ? 2025 : yearPart === 'junior' ? 2026 : 2027;
-            const startMonth = seasonPart === 'fall' ? 8 : 1;
-            const startDate = new Date(year, startMonth - 1, 1);
-            const endDate = new Date(year, startMonth + (seasonPart === 'fall' ? 3 : 4), 0);
-            const events = [];
-            const container = document.getElementById(semesterId);
-
-            if (container) {
-                const courses = container.querySelectorAll('.course-card');
-                courses.forEach(course => {
-                    const code = course.querySelector('.course-code').textContent;
-                    const name = course.querySelector('.course-name').textContent;
-                    const scheduleText = course.querySelector('.course-schedule span').textContent;
-                    const [daysPart, timePart] = scheduleText.split(' • ')[0].split(' ');
-                    const days = daysPart.split('');
-                    const [startTime, endTime] = timePart.split('-');
-                    const type = course.querySelector('.course-tag').textContent.toLowerCase();
-
-                    let currentDate = new Date(startDate);
-                    while (currentDate <= endDate) {
-                        const dayShort = currentDate.toLocaleString('en-US', { weekday: 'short' }).charAt(0).toUpperCase();
-                        if (days.includes(dayShort)) {
-                            events.push({
-                                title: `${code} - ${name} (${startTime}-${endTime})`,
-                                start: currentDate.toISOString().split('T')[0] + 'T' + startTime + ':00',
-                                end: currentDate.toISOString().split('T')[0] + 'T' + endTime + ':00',
-                                allDay: false,
-                                className: `event-${type}`
-                            });
-                        }
-                        currentDate.setDate(currentDate.getDate() + 1);
+                courses.forEach(courseCode => {
+                    const course = courseDatabase[courseCode];
+                    if (course) {
+                        container.appendChild(createCourseElement(courseCode, course));
                     }
                 });
-            }
-
-            return events;
+            });
         }
 
-        function updateCalendar() {
-            const semesterId = document.getElementById('semesterSelect').value;
-            const calendarEl = document.getElementById('calendar');
-            const events = generateCalendarEvents(semesterId);
+        function createCourseElement(code, course) {
+            const element = document.createElement('div');
+            element.className = `course ${course.type}`;
+            element.draggable = true;
+            element.dataset.course = code;
+            element.innerHTML = `
+                <div class="course-header">
+                    <div class="course-code">${code}</div>
+                    <div class="course-credits">${course.credits}</div>
+                </div>
+                <div class="course-title">${course.title}</div>
+                <div class="course-actions">
+                    <button class="course-action-btn" onclick="removeCourse('${code}')" title="Remove">×</button>
+                </div>
+            `;
 
-            if (window.calendar && typeof window.calendar.destroy === 'function') {
-                window.calendar.destroy();
-            }
+            element.addEventListener('click', () => showCourseDetails(code, course));
+            return element;
+        }
 
-            window.calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'timeGridWeek',
-                events: events,
-                height: 'auto',
-                eventContent: function(arg) {
-                    return { html: `<div style="white-space: normal;">${arg.event.title}</div>` };
-                },
-                eventDidMount: function(info) {
-                    const type = info.event.classNames[0].replace('event-', '');
-                    info.el.style.backgroundColor = getEventColor(type);
-                    info.el.style.borderColor = getEventColor(type);
-                },
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        function setupDragAndDrop() {
+            // Drag start
+            document.addEventListener('dragstart', (e) => {
+                if (e.target.classList.contains('course')) {
+                    e.target.classList.add('dragging');
+                    e.dataTransfer.setData('text/plain', e.target.dataset.course);
                 }
             });
 
-            window.calendar.render();
-        }
-
-        function addMajor() {
-            openModal('add', '', '', true);
-        }
-
-        function addMajorSubmit() {
-            const majorName = document.getElementById('majorName').value.trim();
-            if (!majorName) {
-                alert('Please enter a major name.');
-                return;
-            }
-            currentMajor = majorName;
-            saveState();
-            document.getElementById('currentMajor').textContent = majorName;
-            updateStats('freshman-fall');
-            closeModal();
-        }
-
-        function initGoogleCalendar() {
-            gapi.load('client:auth2', () => {
-                gapi.client.init({
-                    apiKey: 'YOUR_API_KEY',
-                    clientId: '515503606305-jrcs5fprmkaqnqpja8u3c4g23hku892p.apps.googleusercontent.com',
-                    discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
-                    scope: 'https://www.googleapis.com/auth/calendar'
-                }).then(() => {
-                    gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-                    updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-                }, (error) => {
-                    console.error('Error initializing Google Calendar API:', error);
-                });
-            });
-        }
-
-        function updateSigninStatus(isSignedIn) {
-            if (isSignedIn) {
-            } else {
-                gapi.auth2.getAuthInstance().signIn();
-            }
-        }
-
-        function syncToGoogleCalendar(events) {
-            if (!gapi.auth2.getAuthInstance().isSignedIn.get()) {
-                return;
-            }
-            events.forEach(event => {
-                gapi.client.calendar.events.insert({
-                    calendarId: 'primary',
-                    resource: event
-                }).then(response => {
-                }, error => {
-                    console.error('Error creating event:', error);
-                });
-            });
-        }
-
-        function syncWithGoogleCalendar() {
-            initGoogleCalendar();
-            const allEvents = [];
-            Object.keys(semesterCourses).forEach(semesterId => {
-                const container = document.getElementById(semesterId);
-                if (container) {
-                    const courses = container.querySelectorAll('.course-card');
-                    courses.forEach(course => {
-                        const code = course.querySelector('.course-code').textContent;
-                        const name = course.querySelector('.course-name').textContent;
-                        const scheduleText = course.querySelector('.course-schedule span').textContent;
-                        const [daysPart, timePart] = scheduleText.split(' • ')[0].split(' ');
-                        const [startTime, endTime] = timePart.split('-');
-                        allEvents.push({
-                            summary: `${code} - ${name}`,
-                            start: { dateTime: new Date(2025, 0, 1, startTime.split(':')[0], startTime.split(':')[1]).toISOString() },
-                            end: { dateTime: new Date(2025, 0, 1, endTime.split(':')[0], endTime.split(':')[1]).toISOString() },
-                            recurrence: ['RRULE:FREQ=WEEKLY;UNTIL=20251231T235959Z']
-                        });
-                    });
+            // Drag end
+            document.addEventListener('dragend', (e) => {
+                if (e.target.classList.contains('course')) {
+                    e.target.classList.remove('dragging');
                 }
             });
-            syncToGoogleCalendar(allEvents);
-        }
 
-        window.onload = () => {
-            // Render persisted courses
-            Object.keys(semesterCourses).forEach(semesterId => {
-                const container = document.getElementById(semesterId);
-                semesterCourses[semesterId].forEach(course => {
-                    const courseId = course.code.toLowerCase().replace(/\s+/g, '');
-                    const scheduleText = `${course.days.join('')} ${course.startTime}-${course.endTime}`;
-                    const courseHTML = `
-                        <div class="course-card${course.completed ? ' completed' : ''}" data-course="${courseId}" draggable="true" ondragstart="handleDragStart(event)">
-                            <div class="course-actions">
-                                <button class="action-btn" onclick="editCourse('${courseId}')"><i class="fas fa-edit"></i></button>
-                                <button class="action-btn" onclick="deleteCourse('${courseId}')"><i class="fas fa-trash"></i></button>
-                            </div>
-                            <div class="course-header">
-                                <div class="course-checkbox${course.completed ? ' checked' : ''}" onclick="toggleCourse(this)"><i class="fas fa-check"></i></div>
-                                <div class="course-info">
-                                    <div class="course-code">${course.code}</div>
-                                    <div class="course-name">${course.name}</div>
-                                    <div class="course-meta"><div class="course-tag tag-${course.type}">${course.type.charAt(0).toUpperCase() + course.type.slice(1)}</div></div>
-                                    <div class="course-schedule"><i class="fas fa-clock"></i><span>${scheduleText} • ${course.credits} credits</span></div>
-                                    <div class="course-instructor"><i class="fas fa-chalkboard-teacher"></i><span>${course.instructor || 'TBA'}</span></div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    container.insertAdjacentHTML('beforeend', courseHTML);
+            // Drop zone events
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                zone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    zone.classList.add('drag-over');
+                });
+
+                zone.addEventListener('dragleave', (e) => {
+                    if (!zone.contains(e.relatedTarget)) {
+                        zone.classList.remove('drag-over');
+                    }
+                });
+
+                zone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    zone.classList.remove('drag-over');
+                    
+                    const courseCode = e.dataTransfer.getData('text/plain');
+                    const semesterIndex = parseInt(zone.dataset.semester);
+                    
+                    addCourseToSemester(courseCode, semesterIndex);
                 });
             });
-            updateStats('freshman-fall');
-            document.getElementById('semesterSelect').value = 'freshman-fall';
-            updateCalendar();
-            document.getElementById('currentMajor').textContent = currentMajor;
-        };
+        }
+
+        function addCourseToSemester(courseCode, semesterIndex) {
+            const course = courseDatabase[courseCode];
+            if (!course) return;
+
+            // Remove from current location
+            semesters.forEach(semester => {
+                const index = semester.indexOf(courseCode);
+                if (index > -1) {
+                    semester.splice(index, 1);
+                }
+            });
+
+            // Add to new semester
+            semesters[semesterIndex].push(courseCode);
+            
+            // Remove from DOM
+            const existingElement = document.querySelector(`[data-course="${courseCode}"]`);
+            if (existingElement && existingElement.parentNode.classList.contains('drop-zone')) {
+                existingElement.remove();
+            }
+
+            // Add to new semester in DOM
+            const dropZone = document.querySelector(`[data-semester="${semesterIndex}"]`);
+            const courseElement = createCourseElement(courseCode, course);
+            dropZone.insertBefore(courseElement, dropZone.querySelector('.add-course-btn'));
+
+            updateSemesterCredits();
+            updateStats();
+        }
+
+        function removeCourse(courseCode) {
+            // Remove from semesters
+            semesters.forEach(semester => {
+                const index = semester.indexOf(courseCode);
+                if (index > -1) {
+                    semester.splice(index, 1);
+                }
+            });
+
+            // Remove from DOM
+            const element = document.querySelector(`[data-course="${courseCode}"]`);
+            if (element) {
+                element.remove();
+            }
+
+            updateSemesterCredits();
+            updateStats();
+        }
+
+        function updateSemesterCredits() {
+            semesters.forEach((semesterCourses, index) => {
+                const credits = semesterCourses.reduce((sum, courseCode) => {
+                    return sum + (courseDatabase[courseCode]?.credits || 0);
+                }, 0);
+
+                const header = document.querySelectorAll('.semester-credits')[index];
+                if (header) {
+                    header.textContent = `${credits} credits`;
+                }
+            });
+        }
+
+        function updateStats() {
+            const totalCredits = semesters.reduce((sum, semesterCourses) => {
+                return sum + semesterCourses.reduce((semSum, courseCode) => {
+                    return semSum + (courseDatabase[courseCode]?.credits || 0);
+                }, 0);
+            }, 0);
+
+            const physicsCredits = semesters.reduce((sum, semesterCourses) => {
+                return sum + semesterCourses.reduce((semSum, courseCode) => {
+                    const course = courseDatabase[courseCode];
+                    return semSum + (course && (course.type.includes('physics') || course.type === 'capstone') ? course.credits : 0);
+                }, 0);
+            }, 0);
+
+            const mathCredits = semesters.reduce((sum, semesterCourses) => {
+                return sum + semesterCourses.reduce((semSum, courseCode) => {
+                    const course = courseDatabase[courseCode];
+                    return semSum + (course && course.type.includes('math') ? course.credits : 0);
+                }, 0);
+            }, 0);
+
+            const completedSemesters = semesters.filter(sem => sem.length > 0).length;
+            const avgCredits = completedSemesters > 0 ? Math.round(totalCredits / completedSemesters) : 0;
+
+            document.getElementById('totalCredits').textContent = totalCredits;
+            document.getElementById('physicsCredits').textContent = physicsCredits;
+            document.getElementById('mathCredits').textContent = mathCredits;
+            document.getElementById('completedSemesters').textContent = `${completedSemesters}/8`;
+            document.getElementById('avgCredits').textContent = avgCredits;
+        }
+
+        function loadDefaultPlan() {
+            const defaultPlan = [
+                ['PHY099', 'MAT127', 'PHY203'], // Fall Freshman
+                ['MAT128', 'PHY204', 'CHE201'], // Spring Freshman
+                ['MAT229', 'PHY299', 'PHY306', 'CHE202'], // Fall Sophomore
+                ['PHY321', 'MAT200', 'PHY311'], // Spring Sophomore
+                ['PHY401', 'PHY356', 'MAT326'], // Fall Junior
+                ['PHY421', 'PHY431', 'MAT205', 'CSC220'], // Spring Junior
+                ['PHY422', 'PHY411', 'MAT316'], // Fall Senior
+                ['PHY451', 'PHY413'] // Spring Senior
+            ];
+
+            defaultPlan.forEach((semesterCourses, semesterIndex) => {
+                semesterCourses.forEach(courseCode => {
+                    addCourseToSemester(courseCode, semesterIndex);
+                });
+            });
+        }
+
+        function showCourseDetails(code, course) {
+            const modal = document.getElementById('courseModal');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+
+            title.textContent = `${code}: ${course.title}`;
+            body.innerHTML = `
+                <div class="form-group">
+                    <strong>Credits:</strong> ${course.credits}
+                </div>
+                <div class="form-group">
+                    <strong>Type:</strong> ${course.type.replace('-', ' ').toUpperCase()}
+                </div>
+                <div class="form-group">
+                    <strong>Description:</strong> ${course.description}
+                </div>
+            `;
+
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('courseModal').classList.remove('active');
+        }
+
+        function addCustomCourse() {
+            document.getElementById('addCourseModal').classList.add('active');
+        }
+
+        function closeAddCourseModal() {
+            document.getElementById('addCourseModal').classList.remove('active');
+            document.getElementById('addCourseForm').reset();
+        }
+
+        document.getElementById('addCourseForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const code = document.getElementById('courseCode').value.toUpperCase();
+            const title = document.getElementById('courseTitle').value;
+            const credits = parseInt(document.getElementById('courseCredits').value);
+            const type = document.getElementById('courseType').value;
+            const description = document.getElementById('courseDescription').value || 'Custom course';
+
+            courseDatabase[code] = { title, credits, type, description };
+            
+            // Add to appropriate bank
+            const bankId = type.includes('physics') ? 'physics-options-bank' : 
+                         type.includes('math') ? 'math-bank' :
+                         type.includes('stem') ? 'stem-bank' : 'physics-options-bank';
+            
+            const bank = document.getElementById(bankId);
+            if (bank) {
+                bank.appendChild(createCourseElement(code, courseDatabase[code]));
+            }
+
+            closeAddCourseModal();
+        });
+
+        function savePlan() {
+            const planData = {
+                semesters: semesters,
+                customCourses: Object.fromEntries(
+                    Object.entries(courseDatabase).filter(([code]) => 
+                        !['PHY099', 'PHY203', 'PHY204', 'PHY299', 'PHY306', 'PHY321', 'PHY356', 'PHY401', 'PHY421', 'PHY451',
+                         'MAT127', 'MAT128', 'MAT229', 'MAT200', 'MAT205', 'MAT326', 'MAT316',
+                         'PHY311', 'PHY411', 'PHY422', 'PHY431', 'PHY413', 'PHY425', 'PHY426',
+                         'CHE201', 'CHE202', 'CSC220', 'BIO201', 'ENG272'].includes(code)
+                    )
+                )
+            };
+
+            localStorage.setItem('tcnj-physics-plan', JSON.stringify(planData));
+            alert('Plan saved successfully!');
+        }
+
+        function exportPlan() {
+            const planData = {
+                semesters: semesters,
+                customCourses: Object.fromEntries(
+                    Object.entries(courseDatabase).filter(([code]) => 
+                        !['PHY099', 'PHY203', 'PHY204', 'PHY299', 'PHY306', 'PHY321', 'PHY356', 'PHY401', 'PHY421', 'PHY451',
+                         'MAT127', 'MAT128', 'MAT229', 'MAT200', 'MAT205', 'MAT326', 'MAT316',
+                         'PHY311', 'PHY411', 'PHY422', 'PHY431', 'PHY413', 'PHY425', 'PHY426',
+                         'CHE201', 'CHE202', 'CSC220', 'BIO201', 'ENG272'].includes(code)
+                    )
+                )
+            };
+
+            const blob = new Blob([JSON.stringify(planData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'tcnj-physics-plan.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importPlan() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const planData = JSON.parse(e.target.result);
+                            // Load plan logic here
+                            alert('Plan imported successfully!');
+                        } catch (error) {
+                            alert('Error importing plan: Invalid file format');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+
+        // Initialize the app when page loads
+        document.addEventListener('DOMContentLoaded', initializeApp);
     </script>
 </body>
 </html>
